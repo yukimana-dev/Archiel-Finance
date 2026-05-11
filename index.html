@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilalah Benam Finance | ARC Testnet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; }
+        .bg-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .accent-gradient { background: linear-gradient(135deg, #8A2BE2 0%, #FF1493 100%); }
+        .text-gradient { background: linear-gradient(135deg, #8A2BE2 0%, #FF1493 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-shadow { box-shadow: 0 10px 30px rgba(138, 43, 226, 0.1); border: 1px solid rgba(138, 43, 226, 0.05); }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 bg-white/70 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gradient">Ilalah Benam</div>
+            <div class="hidden md:flex space-x-8 font-medium">
+                <a href="#" class="hover:text-purple-600 transition">Swap</a>
+                <a href="#" class="hover:text-purple-600 transition">Pools</a>
+                <a href="#" class="hover:text-purple-600 transition">Vaults</a>
+                <a href="#" class="hover:text-purple-600 transition">Bridge</a>
+            </div>
+            <button class="accent-gradient text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition shadow-lg">
+                Connect Wallet
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="max-w-5xl mx-auto text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6">Mastering DeFi on <span class="text-gradient">ARC Testnet</span></h1>
+            <p class="text-xl text-slate-500 mb-10 max-w-2xl mx-auto">Platform DeFi All-in-One: Swap, Earn, and Bridge dengan efisiensi maksimal dan antarmuka masa depan.</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <div class="bg-white p-6 rounded-2xl card-shadow w-full md:w-80">
+                    <h3 class="font-bold text-lg mb-2">Omni-Bridge</h3>
+                    <p class="text-sm text-slate-400">Hubungkan aset Anda ke seluruh jaringan dengan satu klik.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl card-shadow w-full md:w-80 border-t-4 border-pink-500">
+                    <h3 class="font-bold text-lg mb-2">Yield Vaults</h3>
+                    <p class="text-sm text-slate-400">Maksimalkan keuntungan Anda di ARC secara otomatis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Swap Widget Interface -->
+    <section class="py-10 bg-slate-50">
+        <div class="max-w-md mx-auto bg-white rounded-3xl p-6 card-shadow border border-purple-50">
+            <div class="flex justify-between mb-6">
+                <h2 class="text-xl font-bold">Swap</h2>
+                <span class="text-purple-500 text-sm font-medium">ARC Testnet</span>
+            </div>
+            <div class="space-y-2">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <label class="text-xs text-slate-400 uppercase">You Pay</label>
+                    <div class="flex justify-between items-center mt-1">
+                        <input type="number" placeholder="0.0" class="bg-transparent text-2xl font-semibold outline-none w-1/2">
+                        <button class="bg-white px-3 py-1 rounded-xl shadow-sm border font-bold flex items-center">ARC <span class="ml-2 text-[10px]">▼</span></button>
+                    </div>
+                </div>
+                <div class="flex justify-center -my-3 relative z-10">
+                    <div class="bg-white p-2 rounded-full border shadow-sm text-purple-500 cursor-pointer">↓</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <label class="text-xs text-slate-400 uppercase">You Receive</label>
+                    <div class="flex justify-between items-center mt-1">
+                        <input type="number" placeholder="0.0" class="bg-transparent text-2xl font-semibold outline-none w-1/2" disabled>
+                        <button class="bg-white px-3 py-1 rounded-xl shadow-sm border font-bold flex items-center">IBF <span class="ml-2 text-[10px]">▼</span></button>
+                    </div>
+                </div>
+            </div>
+            <button class="w-full accent-gradient text-white mt-6 py-4 rounded-2xl font-bold shadow-lg">Swap Now</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 text-center text-slate-400 text-sm border-t mt-20">
+        <p>&copy; 2026 Ilalah Benam Finance. Built on ARC Testnet.</p>
+    </footer>
+
+</body>
+</html>
