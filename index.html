@@ -3,87 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ilalah Benam Finance | ARC Testnet</title>
+    <title>Siregar Finance | Infinite Token Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #ffffff; }
-        .bg-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
-        .accent-gradient { background: linear-gradient(135deg, #8A2BE2 0%, #FF1493 100%); }
-        .text-gradient { background: linear-gradient(135deg, #8A2BE2 0%, #FF1493 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card-shadow { box-shadow: 0 10px 30px rgba(138, 43, 226, 0.1); border: 1px solid rgba(138, 43, 226, 0.05); }
+        html, body { height: 100vh; margin: 0; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; flex-direction: column; background-color: #ffffff; color: #101828; transition: background 0.3s; }
+        body.dark-mode { background-color: #0b0f19; color: white; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.6; pointer-events: none; }
+        header { padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
+        .brand-text { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.02em; color: #5c3bb1; margin-top: 4px; margin-left: -4px; }
+        .arc-brand-gradient { background: linear-gradient(90deg, #5c3bb1 0%, #b8256a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link { cursor: pointer; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; transition: 0.2s; color: #667085; }
+        .nav-link:hover, .nav-link.active { color: #4f46e5; }
+        body.dark-mode .nav-link { color: #98a2b3; }
+        .ui-pill { background-color: #f3f4f6; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid #e5e7eb; transition: 0.3s; }
+        body.dark-mode .ui-pill { background-color: #1f242f; border-color: #2d333f; color: white; }
+        .drop-menu { position: absolute; top: 120%; right: 0; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); display: none; min-width: 220px; z-index: 2000; padding: 12px; border: 1px solid #f0f0f0; }
+        body.dark-mode .drop-menu { background: #161b26; border-color: #1f242f; }
+        .lang-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-weight: 600; color: #101828; }
+        body.dark-mode .lang-item { color: #e4e7eb; }
+        .lang-item:hover { background: #f5f7ff; color: #4338ca; }
+        body.dark-mode .lang-item:hover { background: #232936; }
+        .view-section { display: none; flex: 1; flex-direction: column; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hero-title { font-size: 3.5rem; font-weight: 800; line-height: 1.1; color: #4a3396; letter-spacing: -0.02em; }
+        .hero-desc { font-size: 16.5px; font-weight: 600; color: #475467; max-width: 750px; margin: 0 auto; line-height: 1.6; }
+        .marquee-container { width: 100%; overflow: hidden; padding: 10px 0; position: relative; display: flex; }
+        .marquee-content { display: flex; gap: 20px; white-space: nowrap; width: max-content; }
+        .animate-left { animation: scrollLeft 40s linear infinite; }
+        .animate-right { animation: scrollRight 40s linear infinite; }
+        @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+        .token-card { display: flex; align-items: center; gap: 10px; padding: 10px 22px; border: 1.5px solid #4f46e5; border-radius: 50px; background: white; min-width: fit-content; }
+        body.dark-mode .token-card { background: #161b26; border-color: #4f46e5; }
+        .bottom-branding { text-align: center; padding-bottom: 25px; margin-top: auto; }
+        .sub-footer-label { font-size: 11px; font-weight: 700; letter-spacing: 0.5em; color: #5839b5; margin-bottom: 5px; }
+        .hero-footer { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
     </style>
 </head>
-<body class="text-slate-800">
+<body onclick="closeAll()">
+    <canvas id="bg-canvas"></canvas>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 top-0 bg-white/70 backdrop-blur-md border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-gradient">Ilalah Benam</div>
-            <div class="hidden md:flex space-x-8 font-medium">
-                <a href="#" class="hover:text-purple-600 transition">Swap</a>
-                <a href="#" class="hover:text-purple-600 transition">Pools</a>
-                <a href="#" class="hover:text-purple-600 transition">Vaults</a>
-                <a href="#" class="hover:text-purple-600 transition">Bridge</a>
+    <header>
+        <div class="flex items-center gap-2">
+            <img src="Adobe Express - file (1)_2.png" alt="Logo" style="width:48px; height:auto;">
+            <div class="brand-text uppercase">SIREGAR FINANCE</div>
+        </div>
+
+        <nav class="hidden lg:flex gap-8" id="mainNav">
+            <a onclick="showView('dasbor')" id="nav-dasbor" class="nav-link active">BERANDA</a>
+            <a onclick="showView('portofolio')" id="nav-portofolio" class="nav-link">PORTOFOLIO</a>
+            <a onclick="showView('swap')" id="nav-swap" class="nav-link">SWAP</a>
+            <a onclick="showView('pools')" id="nav-pools" class="nav-link">POOLS</a>
+            <a onclick="showView('stake')" id="nav-stake" class="nav-link">STAKE</a>
+            <a onclick="showView('future')" id="nav-future" class="nav-link">FUTURE <span class="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded ml-1">NEW</span></a>
+        </nav>
+
+        <div class="flex items-center gap-4">
+            <i class="fas fa-moon text-gray-400 cursor-pointer text-lg" id="modeToggle"></i>
+            
+            <div class="relative" onclick="event.stopPropagation()">
+                <div class="ui-pill !border-yellow-500/50" onclick="toggleDrop('netMenu')">
+                    <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" id="netDot"></div>
+                    <span id="curNet">ARC Testnet</span>
+                </div>
+                <div id="netMenu" class="drop-menu">
+                    <div class="lang-item" onclick="switchNetwork()"><img src="arc-logo.png" alt="Arc Logo" class="w-6 h-6 mr-2"> Arc Testnet</div>
+                </div>
             </div>
-            <button class="accent-gradient text-white px-6 py-2 rounded-full font-semibold hover:opacity-90 transition shadow-lg">
-                Connect Wallet
+
+            <div class="relative" onclick="event.stopPropagation()">
+                <div class="ui-pill !bg-[#4338ca] !text-white !border-none" onclick="toggleDrop('langMenu')">
+                    <span id="curLang">ID</span> <i class="fas fa-chevron-down text-[10px]"></i>
+                </div>
+                <div id="langMenu" class="drop-menu">
+                    <div class="lang-item" onclick="setLang('ID')">🇮🇩 Indonesia</div>
+                    <div class="lang-item" onclick="setLang('MD')">ᴍᴅ Mandailing</div>
+                    <div class="lang-item" onclick="setLang('EN')">🇺🇸 English</div>
+                    <div class="lang-item" onclick="setLang('JP')">🇯🇵 Japanese</div>
+                    <div class="lang-item" onclick="setLang('AR')">🇸🇦 Arabic</div>
+                </div>
+            </div>
+
+            <div class="relative" onclick="event.stopPropagation()">
+                <button id="connectBtn" onclick="handleWalletAction()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase transition-all hover:scale-105">
+                    Connect Wallet
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="view-dasbor" class="view-section active">
+        <div class="flex-1 flex flex-col items-center justify-start text-center px-4 pt-8">
+            <h1 class="hero-title mb-6" id="mainTitle">Masa Depan Decentralized Finance (DeFi)<br><span class="arc-brand-gradient">di Arc Network</span></h1>
+            <p class="hero-desc mb-8" id="mainDesc">Nikmati pengalaman DeFi kelas dunia dengan keamanan institusional dan efisiensi teknologi Arc Network yang tak tertandingi</p>
+            
+            <button id="startBtn" onclick="showView('swap')" class="bg-[#4338ca] text-white px-10 py-4 rounded-2xl font-bold text-sm uppercase shadow-2xl hover:scale-105 transition-transform mb-8">
+                Mulai Sekarang <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+
+            <div class="marquee-container"><div class="marquee-content animate-left" id="marqueeList1"></div></div>
+            <div class="marquee-container"><div class="marquee-content animate-right" id="marqueeList2"></div></div>
+
+            <div class="bottom-branding">
+                <div id="footerLabel" class="sub-footer-label uppercase">THE NEW STANDARD OF FINANCE</div>
+                <h2 id="footerTitle" class="hero-footer arc-brand-gradient">Elegansi Dalam Desentralisasi</h2>
+                <footer class="text-[9px] font-bold text-gray-400 tracking-[0.3em] uppercase">© 2026 SIREGAR FINANCE . ALL RIGHTS RESERVED</footer>
+            </div>
+        </div>
+    </main>
+
+    <main id="view-swap" class="view-section items-center justify-center pt-10">
+        <div class="w-full max-w-[440px] bg-white dark:bg-[#161b26] rounded-[32px] p-6 shadow-2xl border border-gray-100 dark:border-gray-800">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="swapTitleText" class="text-xl font-bold">Swap</h2>
+                <i class="fas fa-cog text-gray-400"></i>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-[#1f242f] rounded-2xl p-4 mb-1">
+                <div class="flex justify-between mb-2 text-xs font-bold text-gray-500">
+                    <span id="labelDari">Dari</span> 
+                    <span id="balance1">Saldo: 0.0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <input type="number" id="inputAmount1" placeholder="0.0" class="bg-transparent text-2xl font-bold outline-none w-1/2">
+                    <div class="flex items-center gap-2 bg-white dark:bg-[#2d333f] px-3 py-2 rounded-xl shadow-sm">
+                        <img id="logo1" src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" class="w-6 h-6 rounded-full">
+                        <span id="symbol1" class="font-bold">USDC</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-[#1f242f] rounded-2xl p-4 mb-6">
+                <div class="flex justify-between mb-2 text-xs font-bold text-gray-500">
+                    <span id="labelKe">Ke</span> 
+                    <span id="balance2">Saldo: 0.0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <input type="number" id="inputAmount2" placeholder="0.0" class="bg-transparent text-2xl font-bold outline-none w-1/2" readonly>
+                    <div class="flex items-center gap-2 bg-white dark:bg-[#2d333f] px-3 py-2 rounded-xl shadow-sm">
+                        <img id="logo2" src="https://cryptologos.cc/logos/euro-coin-eurc-logo.png" class="w-6 h-6 rounded-full">
+                        <span id="symbol2" class="font-bold">EURC</span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="mainSwapBtn" onclick="performSwap()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg">
+                Lakukan Swap
             </button>
         </div>
-    </nav>
+    </main>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-20 px-6">
-        <div class="max-w-5xl mx-auto text-center">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6">Mastering DeFi on <span class="text-gradient">ARC Testnet</span></h1>
-            <p class="text-xl text-slate-500 mb-10 max-w-2xl mx-auto">Platform DeFi All-in-One: Swap, Earn, and Bridge dengan efisiensi maksimal dan antarmuka masa depan.</p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <div class="bg-white p-6 rounded-2xl card-shadow w-full md:w-80">
-                    <h3 class="font-bold text-lg mb-2">Omni-Bridge</h3>
-                    <p class="text-sm text-slate-400">Hubungkan aset Anda ke seluruh jaringan dengan satu klik.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl card-shadow w-full md:w-80 border-t-4 border-pink-500">
-                    <h3 class="font-bold text-lg mb-2">Yield Vaults</h3>
-                    <p class="text-sm text-slate-400">Maksimalkan keuntungan Anda di ARC secara otomatis.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 
-    <!-- Swap Widget Interface -->
-    <section class="py-10 bg-slate-50">
-        <div class="max-w-md mx-auto bg-white rounded-3xl p-6 card-shadow border border-purple-50">
-            <div class="flex justify-between mb-6">
-                <h2 class="text-xl font-bold">Swap</h2>
-                <span class="text-purple-500 text-sm font-medium">ARC Testnet</span>
-            </div>
-            <div class="space-y-2">
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <label class="text-xs text-slate-400 uppercase">You Pay</label>
-                    <div class="flex justify-between items-center mt-1">
-                        <input type="number" placeholder="0.0" class="bg-transparent text-2xl font-semibold outline-none w-1/2">
-                        <button class="bg-white px-3 py-1 rounded-xl shadow-sm border font-bold flex items-center">ARC <span class="ml-2 text-[10px]">▼</span></button>
-                    </div>
-                </div>
-                <div class="flex justify-center -my-3 relative z-10">
-                    <div class="bg-white p-2 rounded-full border shadow-sm text-purple-500 cursor-pointer">↓</div>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <label class="text-xs text-slate-400 uppercase">You Receive</label>
-                    <div class="flex justify-between items-center mt-1">
-                        <input type="number" placeholder="0.0" class="bg-transparent text-2xl font-semibold outline-none w-1/2" disabled>
-                        <button class="bg-white px-3 py-1 rounded-xl shadow-sm border font-bold flex items-center">IBF <span class="ml-2 text-[10px]">▼</span></button>
-                    </div>
-                </div>
-            </div>
-            <button class="w-full accent-gradient text-white mt-6 py-4 rounded-2xl font-bold shadow-lg">Swap Now</button>
-        </div>
-    </section>
+    <script>
+        const translations = {
+            ID: {
+                beranda: "BERANDA", portofolio: "PORTOFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE",
+                title: "Masa Depan Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>di Arc Network</span>",
+                desc: "Nikmati pengalaman DeFi kelas dunia dengan keamanan institusional dan efisiensi teknologi Arc Network yang tak tertandingi",
+                btn: "Mulai Sekarang", footer: "Elegansi Dalam Desentralisasi", dari: "Dari", ke: "Ke", doSwap: "Lakukan Swap",
+                balance: "Saldo", conn: "Connect Wallet"
+            },
+            MD: {
+                beranda: "BAGAS", portofolio: "PORTOFOLIO", swap: "TUKAR", pools: "KOLAM", stake: "STAKE", future: "MASA DEPAN",
+                title: "Masa Depan Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>di Arc Network</span>",
+                desc: "Dapotkon pangalaman DeFi kelas dunia mardongan kaamanan institusional dot efisiensi teknologi Arc Network na soada tudosanna",
+                btn: "Mulaima Sannari", footer: "Elegansi Bagasan Desentralisasi", dari: "Sian", ke: "Tu", doSwap: "Tukarkon Sannari",
+                balance: "Saldo", conn: "Pahubungkon Dompet"
+            },
+            EN: {
+                beranda: "HOME", portofolio: "PORTFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE",
+                title: "The Future of DeFi<br><span class='arc-brand-gradient'>on Arc Network</span>",
+                desc: "Experience world-class DeFi with institutional security and the unparalleled efficiency of Arc Network technology",
+                btn: "Start Now", footer: "Elegance In Decentralization", dari: "From", ke: "To", doSwap: "Swap Now",
+                balance: "Balance", conn: "Connect Wallet"
+            },
+            JP: {
+                beranda: "ホーム", portofolio: "ポートフォリオ", swap: "スワップ", pools: "プール", stake: "ステーク", future: "未来",
+                title: "Arc Networkにおける<br><span class='arc-brand-gradient'>DeFi의未来</span>",
+                desc: "Arc Network技術の比類のない効率性と、機関レベルのセキュリティを備えたワールドクラスのDeFiを体験してください",
+                btn: "今すぐ始める", footer: "分散化における優雅さ", dari: "から", ke: "へ", doSwap: "スワップする",
+                balance: "残高", conn: "ウォレット接続"
+            },
+            AR: {
+                beranda: "الرئيسية", portofolio: "المحفظة", swap: "تبديل", pools: "أحواض", stake: "رهان", future: "مستقبل",
+                title: "مستقبل التمويل اللامركزي<br><span class='arc-brand-gradient'>على شبكة Arc</span>",
+                desc: "استمتع بتجربة DeFi عالمية المستوى مع أمان مؤسسي وكفاءة لا مثيل لها dari تقنية Arc Network",
+                btn: "ابدأ الآن", footer: "الأناقة في اللامركزية", dari: "من", ke: "إلى", doSwap: "تبديل الآن",
+                balance: "رصيد", conn: "ربط المحفظة"
+            }
+        };
 
-    <!-- Footer -->
-    <footer class="py-10 text-center text-slate-400 text-sm border-t mt-20">
-        <p>&copy; 2026 Ilalah Benam Finance. Built on ARC Testnet.</p>
-    </footer>
+        function setLang(lang) {
+            const t = translations[lang];
+            document.getElementById('curLang').innerText = lang;
+            
+            // Update Nav
+            document.getElementById('nav-dasbor').innerText = t.beranda;
+            document.getElementById('nav-portofolio').innerText = t.portofolio;
+            document.getElementById('nav-swap').innerText = t.swap;
+            document.getElementById('nav-pools').innerText = t.pools;
+            document.getElementById('nav-stake').innerText = t.stake;
+            document.getElementById('nav-future').innerHTML = `${t.future} <span class="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded ml-1">NEW</span>`;
+            
+            // Update Hero
+            document.getElementById('mainTitle').innerHTML = t.title;
+            document.getElementById('mainDesc').innerText = t.desc;
+            document.getElementById('startBtn').innerHTML = `${t.btn} <i class="fas fa-arrow-right ml-2"></i>`;
+            document.getElementById('footerTitle').innerText = t.footer;
+            
+            // Update Swap UI
+            document.getElementById('swapTitleText').innerText = t.swap;
+            document.getElementById('labelDari').innerText = t.dari;
+            document.getElementById('labelKe').innerText = t.ke;
+            document.getElementById('mainSwapBtn').innerText = t.doSwap;
+            
+            // Update Wallet Button if not connected
+            if(!userAddress) document.getElementById('connectBtn').innerText = t.conn;
+            
+            closeAll();
+        }
 
+        let userAddress = null;
+        const arcTestnetTokens = [
+            { name: "USDC", logo: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png" },
+            { name: "REGAR", logo: "Adobe Express - file (1)_2.png", Alt: "w-50 h-50 rounded-full" },
+            { name: "EURC", logo: "eurc.png" },
+            { name: "USDT", logo: "https://cryptologos.cc/logos/tether-usdt-logo.png" }
+        ];
+
+        async function handleWalletAction() {
+            if (typeof window.ethereum !== 'undefined') {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAddress = accounts[0];
+                document.getElementById('connectBtn').innerText = `${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
+            }
+        }
+
+        async function performSwap() {
+            const btn = document.getElementById('mainSwapBtn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+            setTimeout(() => {
+                alert("Swap Berhasil!");
+                btn.innerText = translations[document.getElementById('curLang').innerText].doSwap;
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        function showView(id) {
+            document.querySelectorAll('main').forEach(m => m.classList.remove('active'));
+            document.getElementById('view-'+id).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            document.getElementById('nav-'+id).classList.add('active');
+        }
+
+        function toggleDrop(id) { closeAll(); document.getElementById(id).style.display = 'block'; }
+        function closeAll() { document.querySelectorAll('.drop-menu').forEach(m => m.style.display = 'none'); }
+        document.getElementById('modeToggle').onclick = () => document.body.classList.toggle('dark-mode');
+
+        window.onload = () => {
+            const content = arcTestnetTokens.map(t => `<div class="token-card"><img src="${t.logo}" class="w-5 h-5 rounded-full"><span class="font-bold text-xs">${t.name}</span></div>`).join('');
+            document.getElementById('marqueeList1').innerHTML = content.repeat(10);
+            document.getElementById('marqueeList2').innerHTML = content.repeat(10);
+        };
+    </script>
 </body>
 </html>
