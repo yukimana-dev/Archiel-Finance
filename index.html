@@ -9,92 +9,116 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        html, body { height: 100vh; margin: 0; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { display: flex; flex-direction: column; background-color: #ffffff; color: #101828; transition: background 0.3s; }
+        html, body { min-height: 100vh; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; flex-direction: column; background-color: #ffffff; color: #101828; transition: background 0.3s; overflow-x: hidden; }
         body.dark-mode { background-color: #0b0f19; color: white; }
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.6; pointer-events: none; }
-        header { padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
-        .brand-text { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.02em; color: #5c3bb1; margin-top: 4px; margin-left: -4px; }
+        
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 1; pointer-events: none; }
+        
+        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; position: relative; }
+        @media (min-width: 1024px) { header { padding: 20px 60px; } }
+
+        .brand-text { font-size: 1.1rem; font-weight: 900; letter-spacing: -0.02em; color: #5c3bb1; margin-top: 4px; margin-left: -4px; }
+        @media (min-width: 1024px) { .brand-text { font-size: 1.25rem; } }
+
         .arc-brand-gradient { background: linear-gradient(90deg, #5c3bb1 0%, #b8256a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .nav-link { cursor: pointer; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; transition: 0.2s; color: #667085; }
         .nav-link:hover, .nav-link.active { color: #4f46e5; }
         body.dark-mode .nav-link { color: #98a2b3; }
-        .ui-pill { background-color: #f3f4f6; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid #e5e7eb; transition: 0.3s; }
+        
+        .ui-pill { background-color: #f3f4f6; padding: 6px 10px; border-radius: 10px; font-weight: 700; font-size: 11px; display: flex; align-items: center; gap: 6px; cursor: pointer; border: 1px solid #e5e7eb; transition: 0.3s; white-space: nowrap; }
+        @media (min-width: 1024px) { .ui-pill { padding: 8px 14px; font-size: 12px; gap: 8px; } }
         body.dark-mode .ui-pill { background-color: #1f242f; border-color: #2d333f; color: white; }
-        .drop-menu { position: absolute; top: 120%; right: 0; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); display: none; min-width: 220px; z-index: 2000; padding: 12px; border: 1px solid #f0f0f0; }
+        
+        .drop-menu { position: absolute; top: 120%; right: 0; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); display: none; min-width: 200px; z-index: 2000; padding: 12px; border: 1px solid #f0f0f0; }
         body.dark-mode .drop-menu { background: #161b26; border-color: #1f242f; }
+        
         .lang-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-weight: 600; color: #101828; }
         body.dark-mode .lang-item { color: #e4e7eb; }
         .lang-item:hover { background: #f5f7ff; color: #4338ca; }
         body.dark-mode .lang-item:hover { background: #232936; }
-        .view-section { display: none; flex: 1; flex-direction: column; animation: fadeIn 0.4s ease; }
+        
+        .view-section { display: none; flex: 1; flex-direction: column; animation: fadeIn 0.4s ease; padding: 20px 15px; }
         .view-section.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .hero-title { font-size: 3.5rem; font-weight: 800; line-height: 1.1; color: #4a3396; letter-spacing: -0.02em; }
-        .hero-desc { font-size: 16.5px; font-weight: 600; color: #475467; max-width: 750px; margin: 0 auto; line-height: 1.6; }
+        
+        .hero-title { font-size: 2.2rem; font-weight: 800; line-height: 1.2; color: #4a3396; letter-spacing: -0.02em; }
+        @media (min-width: 1024px) { .hero-title { font-size: 3.5rem; line-height: 1.1; } }
+        
+        .hero-desc { font-size: 14px; font-weight: 600; color: #475467; max-width: 750px; margin: 0 auto; line-height: 1.6; }
+        @media (min-width: 1024px) { .hero-desc { font-size: 16.5px; } }
+        
         .marquee-container { width: 100%; overflow: hidden; padding: 10px 0; position: relative; display: flex; }
-        .marquee-content { display: flex; gap: 20px; white-space: nowrap; width: max-content; }
+        .marquee-content { display: flex; gap: 15px; white-space: nowrap; width: max-content; }
         .animate-left { animation: scrollLeft 40s linear infinite; }
         .animate-right { animation: scrollRight 40s linear infinite; }
         @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-        .token-card { display: flex; align-items: center; gap: 10px; padding: 10px 22px; border: 1.5px solid #4f46e5; border-radius: 50px; background: white; min-width: fit-content; }
+        
+        .token-card { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1.5px solid #4f46e5; border-radius: 50px; background: white; min-width: fit-content; }
         body.dark-mode .token-card { background: #161b26; border-color: #4f46e5; }
-        .bottom-branding { text-align: center; padding-bottom: 25px; margin-top: auto; }
-        .sub-footer-label { font-size: 11px; font-weight: 700; letter-spacing: 0.5em; color: #5839b5; margin-bottom: 5px; }
-        .hero-footer { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+        
+        .bottom-branding { text-align: center; padding-top: 40px; padding-bottom: 25px; margin-top: auto; }
+        .sub-footer-label { font-size: 10px; font-weight: 700; letter-spacing: 0.3em; color: #5839b5; margin-bottom: 5px; }
+        .hero-footer { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+        @media (min-width: 1024px) { .hero-footer { font-size: 2.6rem; } }
+
+        .token-fallback-logo { display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; background: linear-gradient(135deg, #5c3bb1 0%, #b8256a 100%); border-radius: 9999px; text-transform: uppercase; }
+        
+        #mobileNavList { display: none; flex-direction: column; gap: 16px; padding: 20px; background: white; border-bottom: 1px solid #e5e7eb; }
+        body.dark-mode #mobileNavList { background: #161b26; border-color: #1f242f; }
     </style>
 </head>
 <body onclick="closeAll()">
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <div class="flex items-center gap-2">
-            <img src="Adobe Express - file (1)_2.png" alt="Logo" style="width:64px; height:auto;">
-            <div class="flex flex-col ml-[-4px] mt-1">
+        <div class="flex items-center gap-1.5 lg:gap-2">
+            <img src="Adobe Express - file (1)_2.png" alt="Logo" class="w-12 h-auto lg:w-16">
+            <div class="flex flex-col ml-[-2px] mt-0.5">
                 <div class="brand-text uppercase">SIREGAR FINANCE</div>
-                <div class="text-[10px] font-light text-black-1 tracking-wider mt-0.9">The Pinnacle of DeFi</div>
+                <div class="text-[8px] lg:text-[10px] font-light tracking-wider mt-0.5">The Pinnacle of DeFi</div>
             </div>
         </div>
 
         <nav class="hidden lg:flex gap-8" id="mainNav">
-            <a onclick="showView('dasbor')" id="nav-dasbor" class="nav-link active">HOME</a>
-            <a onclick="showView('portofolio')" id="nav-portofolio" class="nav-link">PORTFOLIO</a>
+            <a onclick="showView('dashboard')" id="nav-dashboard" class="nav-link active">HOME</a>
+            <a onclick="showView('portfolio')" id="nav-portfolio" class="nav-link">PORTFOLIO</a>
             <a onclick="showView('swap')" id="nav-swap" class="nav-link">SWAP</a>
             <a onclick="showView('pools')" id="nav-pools" class="nav-link">POOLS</a>
             <a onclick="showView('stake')" id="nav-stake" class="nav-link">STAKE</a>
             <a onclick="showView('future')" id="nav-future" class="nav-link">FUTURE <span class="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded ml-1">NEW</span></a>
         </nav>
 
-        <div class="flex items-center gap-4">
-            <i class="fas fa-moon text-gray-400 cursor-pointer text-lg" id="modeToggle"></i>
+        <div class="flex items-center gap-2 lg:gap-4">
+            <i class="fas fa-moon text-gray-400 cursor-pointer text-base lg:text-lg" id="modeToggle"></i>
             
             <div class="relative" onclick="event.stopPropagation()">
                 <div class="ui-pill !border-yellow-500/50" onclick="toggleDrop('netMenu')">
-                    <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" id="netDot"></div>
-                    <span id="curNet">Select Network</span>
+                    <div class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" id="netDot"></div>
+                    <span id="curNet" class="max-w-[70px] lg:max-w-none overflow-hidden text-ellipsis">Network</span>
                 </div>
                 <div id="netMenu" class="drop-menu">
-                    <div class="lang-item" onclick="switchNetwork()"><img src="arc-logo.png" alt="Arc Logo" class="w-6 h-6 mr-2">Arc Network</div>
+                    <div class="lang-item" onclick="switchNetwork()"><img src="arc-logo.png" alt="Arc Logo" class="w-5 h-5 mr-2">Arc Network</div>
                 </div>
             </div>
 
             <div class="relative" onclick="event.stopPropagation()">
                 <div class="ui-pill !bg-[#4338ca] !text-white !border-none" onclick="toggleDrop('langMenu')">
-                    <span id="curLang">EN</span> <i class="fas fa-chevron-down text-[10px]"></i>
+                    <span id="curLang">EN</span> <i class="fas fa-chevron-down text-[8px]"></i>
                 </div>
                 <div id="langMenu" class="drop-menu">
-                    <div class="lang-item" onclick="setLang('EN')">🇺🇸 English</div>
-                    <div class="lang-item" onclick="setLang('ID')">🇮🇩 Indonesia</div>
-                    <div class="lang-item" onclick="setLang('MD')">ᴍᴅ Mandailing</div>
-                    <div class="lang-item" onclick="setLang('JP')">🇯🇵 Japanese</div>
-                    <div class="lang-item" onclick="setLang('AR')">🇸🇦 Arabic</div>
+                    <div class="lang-item" onclick="setLang('EN')">🇺🇸 EN</div>
+                    <div class="lang-item" onclick="setLang('ID')">🇮🇩 ID</div>
+                    <div class="lang-item" onclick="setLang('MD')">ᴍᴅ MD</div>
+                    <div class="lang-item" onclick="setLang('JP')">🇯🇵 JP</div>
+                    <div class="lang-item" onclick="setLang('AR')">🇸🇦 AR</div>
                 </div>
             </div>
 
             <div class="relative" onclick="event.stopPropagation()">
-                <button id="connectBtn" onclick="handleWalletAction()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase transition-all hover:scale-105">
-                    Connect Wallet
+                <button id="connectBtn" onclick="handleWalletAction()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-2 lg:px-6 lg:py-2.5 rounded-xl font-bold text-[10px] lg:text-xs uppercase transition-all active:scale-95">
+                    Connect
                 </button>
                 <div id="walletMenu" class="drop-menu">
                     <div class="lang-item text-red-500" onclick="disconnectWallet()">
@@ -102,91 +126,112 @@
                     </div>
                 </div>
             </div>
+
+            <button onclick="toggleMobileNav(event)" class="lg:hidden text-gray-500 dark:text-gray-300 focus:outline-none p-1">
+                <i class="fas fa-bars text-lg" id="hamburgerIcon"></i>
+            </button>
         </div>
     </header>
 
-    <main id="view-dasbor" class="view-section active">
-        <div class="flex-1 flex flex-col items-center justify-start text-center px-4 pt-8">
-            <h1 class="hero-title mb-6" id="mainTitle">The Future of DeFi<br><span class="arc-brand-gradient">on Arc Network</span></h1>
-            <p class="hero-desc mb-8" id="mainDesc">Experience world-class DeFi with institutional security and the unparalleled efficiency of Arc Network technology</p>
+    <div id="mobileNavList" onclick="event.stopPropagation()">
+        <a onclick="showView('dashboard'); toggleMobileNav();" id="m-nav-dashboard" class="nav-link active py-1 border-b border-gray-100 dark:border-gray-800">HOME</a>
+        <a onclick="showView('portfolio'); toggleMobileNav();" id="m-nav-portfolio" class="nav-link py-1 border-b border-gray-100 dark:border-gray-800">PORTFOLIO</a>
+        <a onclick="showView('swap'); toggleMobileNav();" id="m-nav-swap" class="nav-link py-1 border-b border-gray-100 dark:border-gray-800">SWAP</a>
+        <a onclick="showView('pools'); toggleMobileNav();" id="m-nav-pools" class="nav-link py-1 border-b border-gray-100 dark:border-gray-800">POOLS</a>
+        <a onclick="showView('stake'); toggleMobileNav();" id="m-nav-stake" class="nav-link py-1 border-b border-gray-100 dark:border-gray-800">STAKE</a>
+        <a onclick="showView('future'); toggleMobileNav();" id="m-nav-future" class="nav-link py-1">FUTURE <span class="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded ml-1">NEW</span></a>
+    </div>
+
+    <main id="view-dashboard" class="view-section active">
+        <div class="flex-1 flex flex-col items-center justify-start text-center px-2 pt-4 lg:pt-8">
+            <h1 class="hero-title mb-4 lg:mb-6" id="mainTitle">The Future of DeFi<br><span class="arc-brand-gradient">on Arc Network</span></h1>
+            <p class="hero-desc mb-6 lg:mb-8" id="mainDesc">Experience world-class DeFi with institutional security and the unparalleled efficiency of Arc Network technology</p>
             
-            <button id="startBtn" onclick="showView('swap')" class="bg-[#4338ca] text-white px-10 py-4 rounded-2xl font-bold text-sm uppercase shadow-2xl hover:scale-105 transition-transform mb-8">
+            <button id="startBtn" onclick="showView('swap')" class="bg-[#4338ca] text-white px-8 py-3.5 lg:px-10 lg:py-4 rounded-2xl font-bold text-xs lg:text-sm uppercase shadow-2xl hover:scale-105 transition-transform mb-8">
                 Start Now <i class="fas fa-arrow-right ml-2"></i>
             </button>
 
-            <div class="marquee-container">
+            <div class="marquee-container mb-2">
                 <div class="marquee-content animate-left" id="marqueeList1"></div>
             </div>
-            <div class="marquee-container">
+            <div class="marquee-container mb-6">
                 <div class="marquee-content animate-right" id="marqueeList2"></div>
             </div>
 
             <div class="bottom-branding">
                 <div id="footerLabel" class="sub-footer-label uppercase">THE NEW STANDARD OF FINANCE</div>
                 <h2 id="footerTitle" class="hero-footer arc-brand-gradient">Elegance In Decentralization</h2>
-                <footer class="text-[9px] font-bold text-gray-400 tracking-[0.3em] uppercase">© 2026 ARCHIEL FINANCE . ALL RIGHTS RESERVED</footer>
+                <footer class="text-[8px] lg:text-[9px] font-bold text-gray-400 tracking-[0.2em] lg:tracking-[0.3em] uppercase">© 2026 ARCHIEL FINANCE . ALL RIGHTS RESERVED</footer>
             </div>
         </div>
     </main>
 
-    <main id="view-swap" class="view-section items-center justify-center pt-10">
-        <div class="w-full max-w-[440px] bg-white dark:bg-[#161b26] rounded-[32px] p-6 shadow-2xl border border-gray-100 dark:border-gray-800">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="swapTitleText" class="text-xl font-bold">Swap</h2>
+    <main id="view-swap" class="view-section items-center justify-center pt-4 lg:pt-10">
+        <div class="w-full max-w-[440px] bg-white dark:bg-[#161b26] rounded-[24px] lg:rounded-[32px] p-5 lg:p-6 shadow-2xl border border-gray-100 dark:border-gray-800">
+            <div class="flex justify-between items-center mb-5">
+                <h2 id="swapTitleText" class="text-lg lg:text-xl font-bold">Swap</h2>
                 <i class="fas fa-cog text-gray-400 cursor-pointer hover:rotate-90 transition-transform"></i>
             </div>
 
             <div class="bg-gray-50 dark:bg-[#1f242f] rounded-2xl p-4 mb-1 border border-transparent hover:border-indigo-500 transition-all">
-                <div class="flex justify-between mb-2 text-xs font-bold text-gray-500">
+                <div class="flex justify-between mb-1.5 text-xs font-bold text-gray-500">
                     <span id="labelDari">From</span> 
                     <span id="balance1" class="label-balance">Balance: 0.0</span>
                 </div>
-                <div class="flex justify-between items-center">
-                    <input type="number" id="inputAmount1" placeholder="0.0" class="bg-transparent text-2xl font-bold outline-none w-1/2">
-                    <button onclick="openTokenModal('input1')" class="bg-white dark:bg-[#2d333f] shadow-sm rounded-xl px-3 py-2 flex items-center gap-2 hover:scale-105">
-                        <img id="logo1" src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" class="w-6 h-6 rounded-full">
-                        <span id="symbol1" class="font-bold">USDC</span>
-                        <i class="fas fa-chevron-down text-[10px]"></i>
+                <div class="flex justify-between items-center gap-2">
+                    <input type="number" id="inputAmount1" placeholder="0.0" class="bg-transparent text-xl lg:text-2xl font-bold outline-none w-1/2">
+                    <button onclick="openTokenModal('input1')" class="bg-white dark:bg-[#2d333f] shadow-sm rounded-xl px-2.5 py-1.5 flex items-center gap-2 max-w-[50%] shrink-0">
+                        <div id="wrapperLogo1" class="w-7 h-7 lg:w-8 lg:h-8 flex items-center justify-center overflow-hidden rounded-full bg-transparent">
+                            <img id="logo1" src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" class="w-full h-full object-contain rounded-full scale-110">
+                        </div>
+                        <span id="symbol1" class="font-bold text-sm lg:text-base">USDC</span>
+                        <i class="fas fa-chevron-down text-[9px]"></i>
                     </button>
                 </div>
             </div>
 
             <div class="relative h-2 flex justify-center z-10">
-                <button onclick="flipTokens()" class="absolute -top-4 bg-white dark:bg-[#161b26] border-4 border-gray-50 dark:border-[#0b0f19] w-10 h-10 rounded-xl flex items-center justify-center shadow-md active:scale-90 transition-transform">
-                    <i class="fas fa-retweet text-indigo-600"></i>
+                <button onclick="flipTokens()" class="absolute -top-4 bg-white dark:bg-[#161b26] border-4 border-gray-50 dark:border-[#0b0f19] w-9 h-9 rounded-xl flex items-center justify-center shadow-md active:scale-90 transition-transform">
+                    <i class="fas fa-retweet text-indigo-600 text-xs"></i>
                 </button>
             </div>
 
-            <div class="bg-gray-50 dark:bg-[#1f242f] rounded-2xl p-4 mb-6 border border-transparent hover:border-indigo-500 transition-all">
-                <div class="flex justify-between mb-2 text-xs font-bold text-gray-500">
+            <div class="bg-gray-50 dark:bg-[#1f242f] rounded-2xl p-4 mb-5 border border-transparent hover:border-indigo-500 transition-all">
+                <div class="flex justify-between mb-1.5 text-xs font-bold text-gray-500">
                     <span id="labelKe">To</span> 
                     <span id="balance2" class="label-balance">Balance: 0.0</span>
                 </div>
-                <div class="flex justify-between items-center">
-                    <input type="number" id="inputAmount2" placeholder="0.0" class="bg-transparent text-2xl font-bold outline-none w-1/2" readonly>
-                    <button onclick="openTokenModal('input2')" class="bg-white dark:bg-[#2d333f] shadow-sm rounded-xl px-3 py-2 flex items-center gap-2 hover:scale-105">
-                        <img id="logo2" src="Adobe Express - file (1)_2.png" class="w-6 h-6 rounded-full">
-                        <span id="symbol2" class="font-bold">REGAR</span>
-                        <i class="fas fa-chevron-down text-[10px]"></i>
+                <div class="flex justify-between items-center gap-2">
+                    <input type="number" id="inputAmount2" placeholder="0.0" class="bg-transparent text-xl lg:text-2xl font-bold outline-none w-1/2" readonly>
+                    <button onclick="openTokenModal('input2')" class="bg-white dark:bg-[#2d333f] shadow-sm rounded-xl px-2.5 py-1.5 flex items-center gap-2 max-w-[50%] shrink-0">
+                        <div id="wrapperLogo2" class="w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center overflow-visible bg-transparent">
+                            <img id="logo2" src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="w-full h-full object-contain rounded-full scale-110">
+                        </div>
+                        <span id="symbol2" class="font-bold text-sm lg:text-base">USDT</span>
+                        <i class="fas fa-chevron-down text-[9px]"></i>
                     </button>
                 </div>
             </div>
 
-            <button id="mainSwapBtn" onclick="performSwap()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition-all">
+            <button id="mainSwapBtn" onclick="performSwap()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl font-bold text-base lg:text-lg shadow-lg active:scale-95 transition-all">
                 Swap Now
             </button>
         </div>
     </main>
 
     <div id="tokenModal" class="fixed inset-0 z-[2000] hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-[#161b26] w-full max-w-[400px] rounded-[32px] overflow-hidden shadow-2xl">
-            <div class="p-6 border-b dark:border-gray-800">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 id="pTokenTitle" class="font-bold text-lg">Select Token</h3>
+        <div class="bg-white dark:bg-[#161b26] w-full max-w-[400px] rounded-[24px] lg:rounded-[32px] overflow-hidden shadow-2xl">
+            <div class="p-5 border-b dark:border-gray-800">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 id="pTokenTitle" class="font-bold text-base lg:text-lg">Select Token</h3>
                     <i onclick="closeTokenModal()" class="fas fa-times cursor-pointer p-2 text-gray-400 hover:bg-gray-100 rounded-full"></i>
                 </div>
+                <div class="relative mt-1">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-gray-400 text-xs"></i>
+                    <input type="text" id="tokenSearchInput" oninput="filterTokens()" placeholder="Search name or contract address" class="w-full bg-gray-50 dark:bg-[#1f242f] border border-gray-100 dark:border-gray-800 rounded-xl py-2.5 pl-10 pr-4 text-xs lg:text-sm outline-none focus:border-indigo-500 transition-all">
+                </div>
             </div>
-            <div class="max-h-[350px] overflow-y-auto p-2" id="tokenList"></div>
+            <div class="max-h-[280px] lg:max-h-[350px] overflow-y-auto p-2" id="tokenList"></div>
         </div>
     </div>
 
@@ -208,22 +253,38 @@
         let userAddress = null;
         let currentLanguage = 'EN';
 
+        const tokenBalances = { "USDC": "0.0", "REGAR": "0.0", "EURC": "0.0", "USDT": "0.0", "WAWA": "0.0" };
+
         const arcTestnetTokens = [
             { name: "USDC", address: "0x3600000000000000000000000000000000000000", logo: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png", price: 1.0 },
             { name: "REGAR", address: "0x18C6B42c586A49c18bf151cf9944f4fDCa6FE61D", logo: "Adobe Express - file (1)_2.png", price: 0.5 },
             { name: "EURC", address: "0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a", logo: "eurc.png", price: 1.08 },
-            { name: "USDT", address: "0x175CdB1D338945f0D851A741ccF787D343E57952", logo: "https://cryptologos.cc/logos/tether-usdt-logo.png", price: 1.0 }
+            { name: "USDT", address: "0x175CdB1D338945f0D851A741ccF787D343E57952", logo: "https://cryptologos.cc/logos/tether-usdt-logo.png", price: 1.0 },
+            { name: "WAWA", address: "0x275CdB1D338945f0D851A741ccF787D343E57953", logo: "", price: 0.20 }
         ];
 
         let activeSide = '';
 
         const translations = {
-            ID: { beranda: "BERANDA", portofolio: "PORTOFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE", title: "Masa Depan Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>di Arc Network</span>", desc: "Nikmati pengalaman DeFi kelas dunia dengan keamanan institusional dan efisiensi teknologi Arc Network yang tak tertandingi", btn: "Mulai Sekarang", footer: "Elegansi Dalam Desentralisasi", dari: "Dari", ke: "Ke", doSwap: "Lakukan Swap", pToken: "Pilih Token", balance: "Saldo", selectNet: "Pilih Jaringan" },
-            MD: { beranda: "PARADE", portofolio: "PORTOFOLIO", swap: "TUKAR", pools: "KOLAM", stake: "STAKE", future: "MASO JOLO", title: "Masa Jolo Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>i Arc Network</span>", desc: "Dapotkon pangalaman DeFi kelas dunia mardongan kaamanan institusional dot efisiensi teknologi Arc Network na soada tudosanna", btn: "Mulaian Sannari", footer: "Elegansi Bagasan Desentralisasi", dari: "Sian", ke: "Tu", doSwap: "Tukarkon Sannari", pToken: "Pili Token", balance: "Saldo", selectNet: "Pili Network" },
-            EN: { beranda: "HOME", portofolio: "PORTFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE", title: "The Future of Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>on Arc Network</span>", desc: "Experience world-class DeFi with institutional security and the unparalleled efficiency of Arc Network technology", btn: "Start Now", footer: "Elegance In Decentralization", dari: "From", ke: "To", doSwap: "Swap Now", pToken: "Select Token", balance: "Balance", selectNet: "Select Network" },
-            JP: { beranda: "ホーム", portofolio: "ポートフォリオ", swap: "スワップ", pools: "プール", stake: "ステーク", future: "未来", title: "Arc Networkにおける<br><span class='arc-brand-gradient'>DeFiの未来</span>", desc: "Arc Network技術の比類のない効率性と、機関レベルのセキュリティを備えたワールドクラスのDeFiを体験してください", btn: "今すぐ始める", footer: "分散化における優雅さ", dari: "から", ke: "へ", doSwap: "スワップする", pToken: "トークンを選択", balance: "残高", selectNet: "ネットワーク選択" },
-            AR: { beranda: "الرئيسية", portofolio: "المحفظة", swap: "تبديل", pools: "أحواض", stake: "رهان", future: "مستقبل", title: "مستقبل التمويل اللامركزي<br><span class='arc-brand-gradient'>على شبكة Arc</span>", desc: "استمتع بتجربة DeFi عالمية المستوى مع أمان مؤسسي وكفاءة لا مثيل لها من تقنية Arc Network", btn: "ابدأ الآن", footer: "الأناقة في اللامركزية", dari: "من", ke: "إلى", doSwap: "تبديل الآن", pToken: "اختر العملة", balance: "الرصيد", selectNet: "اختر الشبكة" }
+            ID: { dashboard: "BERANDA", portfolio: "PORTOFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE", title: "Masa Depan Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>di Arc Network</span>", desc: "Nikmati pengalaman DeFi kelas dunia dengan keamanan institusional dan efisiensi teknologi Arc Network yang tak ternandingi", btn: "Mulai Sekarang", footer: "Elegansi Dalam Desentralisasi", dari: "Dari", ke: "Ke", doSwap: "Swap Sekarang", pToken: "Pilih Token", balance: "Saldo", selectNet: "Pilih Jaringan" },
+            MD: { dashboard: "PARADE", portfolio: "PORTOFOLIO", swap: "TUKAR", pools: "KOLAM", stake: "STAKE", future: "MASO JOLO", title: "Masa Jolo Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>i Arc Network</span>", desc: "Dapotkon pangalaman DeFi kelas dunia mardongan kaamanan institusional dot efisiensi teknologi Arc Network na soada tudosanna", btn: "Mulaian Sannari", footer: "Elegansi Bagasan Desentralisasi", dari: "Sian", ke: "Tu", doSwap: "Tukarkon Sannari", pToken: "Pili Token", balance: "Saldo", selectNet: "Pili Network" },
+            EN: { dashboard: "HOME", portfolio: "PORTFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE", title: "The Future of Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>on Arc Network</span>", desc: "Experience world-class DeFi with institutional security and the unparalleled efficiency of Arc Network technology", btn: "Start Now", footer: "Elegance In Decentralization", dari: "From", ke: "To", doSwap: "Swap Now", pToken: "Select Token", balance: "Balance", selectNet: "Select Network" },
+            JP: { dashboard: "ホーム", portfolio: "ポートフォリオ", swap: "スワップ", pools: "プール", stake: "ステーク", future: "未来", title: "Arc Networkにおける<br><span class='arc-brand-gradient'>DeFi of Future</span>", desc: "Arc Network技術の比類のない効率性と、機関レベル Guild のセキュリティを備えたワールドクラス of DeFi を体験してください", btn: "今すぐ始める", footer: "分散化における優雅さ", dari: "から", ke: "へ", doSwap: "スワップする", pToken: "トークンを選択", balance: "残高", selectNet: "ネットワーク選択" },
+            AR: { dashboard: "الرئيسية", portfolio: "المحفظة", swap: "تبديل", pools: "أحواض", stake: "رهان", future: "مستقبل", title: "مستقبل التمويل اللامركزي<br><span class='arc-brand-gradient'>على شبكة Arc</span>", desc: "استمتع بتجربة DeFi عالمية المستوى مع أمان مؤسسي وكفاءة لا مثيل لها من تقنية Arc Network", btn: "ابدأ الآن", footer: "الأناقة في اللامركزية", dari: "من", ke: "إلى", doSwap: "تبديل الآن", pToken: "اختر العملة", balance: "الرصيد", selectNet: "اختر الشبكة" }
         };
+
+        function toggleMobileNav(e) {
+            if(e) e.stopPropagation();
+            const nav = document.getElementById('mobileNavList');
+            const icon = document.getElementById('hamburgerIcon');
+            if (nav.style.display === 'flex') {
+                nav.style.display = 'none';
+                icon.className = "fas fa-bars text-lg";
+            } else {
+                nav.style.display = 'flex';
+                icon.className = "fas fa-times text-lg";
+            }
+        }
 
         function handleWalletAction() {
             if (userAddress) toggleDrop('walletMenu');
@@ -235,7 +296,6 @@
                 try {
                     const instance = await web3Modal.connect();
                     const provider = new ethers.providers.Web3Provider(instance);
-                    
                     try {
                         await window.ethereum.request({
                             method: 'wallet_switchEthereumChain',
@@ -249,12 +309,11 @@
                             });
                         }
                     }
-
                     const accounts = await provider.listAccounts();
                     userAddress = accounts[0];
                     updateWalletUI(userAddress);
                     checkNetwork();
-                    refreshAllBalances();
+                    await refreshAllBalances();
                 } catch (e) { console.error(e); }
             }
         }
@@ -266,6 +325,7 @@
             const balLabel = translations[currentLanguage].balance;
             document.getElementById('balance1').innerText = `${balLabel}: 0.0`;
             document.getElementById('balance2').innerText = `${balLabel}: 0.0`;
+            Object.keys(tokenBalances).forEach(k => tokenBalances[k] = "0.0");
             closeAll();
         }
 
@@ -298,9 +358,10 @@
 
         function updateWalletUI(address) {
             const btn = document.getElementById('connectBtn');
-            btn.innerHTML = address ? `${address.substring(0, 6)}...${address.substring(address.length - 4)}` : "Connect Wallet";
+            btn.innerHTML = address ? `${address.substring(0, 4)}...${address.substring(address.length - 3)}` : "Connect";
         }
 
+        // ==================== FIXED PERFORMSWAP FUNCTION ====================
         async function performSwap() {
             const amount1 = document.getElementById('inputAmount1').value;
             const amount2 = document.getElementById('inputAmount2').value;
@@ -308,18 +369,14 @@
             const symbol1 = document.getElementById('symbol1').innerText;
             const symbol2 = document.getElementById('symbol2').innerText;
             
-            if(!amount1 || amount1 <= 0) {
-                return alert("Please enter token amount!");
-            }
-            if(!userAddress) {
-                return alert("Please connect your wallet first!");
-            }
+            if(!amount1 || amount1 <= 0) return alert("Please enter token amount!");
+            if(!userAddress) return alert("Please connect your wallet first!");
 
             const tokenIn = arcTestnetTokens.find(t => t.name === symbol1);
             const tokenOut = arcTestnetTokens.find(t => t.name === symbol2);
 
             try {
-                btn.innerText = "Awaiting Confirmation...";
+                btn.innerText = "Confirming...";
                 btn.disabled = true;
 
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -327,66 +384,74 @@
                 
                 const genericABI = [
                     "function decimals() view returns (uint8)",
+                    "function allowance(address owner, address spender) view returns (uint256)",
                     "function approve(address spender, uint256 amount) public returns (bool)"
                 ];
-                const contractTokenIn = new ethers.Contract(tokenIn.address.toLowerCase(), genericABI, signer);
                 
-                let decimalIn = 18;
-                try {
-                    decimalIn = await contractTokenIn.decimals();
-                } catch(e) {
-                    decimalIn = (symbol1 === "USDC" || symbol1 === "EURC" || symbol1 === "USDT") ? 6 : 18;
-                }
+                const contractTokenIn = new ethers.Contract(tokenIn.address.toLowerCase(), genericABI, signer);
 
-                // dynamic conversion according to genuine token decimals
-                const amountInUnits = ethers.utils.parseUnits(amount1, decimalIn);
-                const amountOutUnits = ethers.utils.parseUnits(amount2, 6); 
+                // Fixed: Map 6 decimals properly for Arc Network fiat stablecoins, 18 for native/others
+                let decimalIn = (symbol1 === "USDC" || symbol1 === "EURC" || symbol1 === "USDT") ? 6 : 18;
+                let decimalOut = (symbol2 === "USDC" || symbol2 === "EURC" || symbol2 === "USDT") ? 6 : 18;
 
-                const poolABI = [
-                    "function executeSwap(address _tokenIn, address _tokenOut, uint256 _amountIn, uint256 _amountOut) external"
-                ];
+                const fixedAmount1 = Number(amount1).toFixed(decimalIn);
+                const fixedAmount2 = Number(amount2).toFixed(decimalOut);
+
+                const amountInUnits = ethers.utils.parseUnits(fixedAmount1, decimalIn);
+                const amountOutUnits = ethers.utils.parseUnits(fixedAmount2, decimalOut); 
+
+                const poolABI = ["function executeSwap(address _tokenIn, address _tokenOut, uint256 _amountIn, uint226 _amountOut) external"];
                 const poolContract = new ethers.Contract(CONTRACT_POOL_ADDRESS, poolABI, signer);
 
-                btn.innerText = "Approving Token...";
-                const approveTx = await contractTokenIn.approve(CONTRACT_POOL_ADDRESS, amountInUnits);
-                await approveTx.wait();
-
-                btn.innerText = "Executing Swap...";
+                btn.innerText = "Checking Allowance...";
+                const currentAllowance = await contractTokenIn.allowance(userAddress, CONTRACT_POOL_ADDRESS);
                 
+                if (currentAllowance.lt(amountInUnits)) {
+                    if (currentAllowance.gt(0) && (symbol1 === "USDC" || symbol1 === "USDT" || symbol1 === "EURC")) {
+                        btn.innerText = "Resetting Allowance...";
+                        const resetTx = await contractTokenIn.approve(CONTRACT_POOL_ADDRESS, 0);
+                        await resetTx.wait(1);
+                    }
+                    
+                    btn.innerText = "Approving Token...";
+                    const approveTx = await contractTokenIn.approve(CONTRACT_POOL_ADDRESS, amountInUnits);
+                    btn.innerText = "Waiting Approval...";
+                    await approveTx.wait(1); 
+                }
+
+                btn.innerText = "Swapping...";
                 let gasEstimate;
-                try {
+                try { 
                     gasEstimate = await poolContract.estimateGas.executeSwap(
-                        tokenIn.address.toLowerCase(),
-                        tokenOut.address.toLowerCase(),
-                        amountInUnits,
+                        tokenIn.address.toLowerCase(), 
+                        tokenOut.address.toLowerCase(), 
+                        amountInUnits, 
                         amountOutUnits
-                    );
-                } catch(err) {
-                    console.warn("Gas estimation failed, using fallback.", err);
-                    gasEstimate = ethers.BigNumber.from("300000");
+                    ); 
+                } catch(err) { 
+                    gasEstimate = ethers.BigNumber.from("800000"); 
                 }
 
                 const txResponse = await poolContract.executeSwap(
-                    tokenIn.address.toLowerCase(),
-                    tokenOut.address.toLowerCase(),
-                    amountInUnits,
-                    amountOutUnits,
-                    { gasLimit: gasEstimate.add(20000) }
+                    tokenIn.address.toLowerCase(), 
+                    tokenOut.address.toLowerCase(), 
+                    amountInUnits, 
+                    amountOutUnits, 
+                    { gasLimit: gasEstimate.add(100000) } 
                 );
-
-                btn.innerText = "Processing on Arc Network...";
+                
+                btn.innerText = "Processing On-Chain...";
                 await txResponse.wait();
 
-                alert(`Swap Successful!\n${amount1} ${symbol1} successfully swapped to ${symbol2} via ArchielSwapPool.`);
-                
+                alert("Swap Successful!");
                 document.getElementById('inputAmount1').value = '';
                 document.getElementById('inputAmount2').value = '';
-
                 setTimeout(() => { refreshAllBalances(); }, 2000);
-            } catch(e) {
-                console.error("Transaction Error Detail:", e);
-                alert("Transaction Failed or Canceled. Check your token/gas balance!");
-            } finally {
+            } catch(e) { 
+                console.error(e);
+                alert("Transaction Failed on-chain. Please ensure that the smart contract pool has sufficient liquidity!"); 
+            } 
+            finally {
                 btn.innerText = translations[currentLanguage].doSwap;
                 btn.disabled = false;
             }
@@ -396,9 +461,13 @@
             const val = parseFloat(document.getElementById('inputAmount1').value);
             const outField = document.getElementById('inputAmount2');
             if (!val || val <= 0) { outField.value = ''; return; }
+            
             const t1 = arcTestnetTokens.find(t => t.name === document.getElementById('symbol1').innerText);
             const t2 = arcTestnetTokens.find(t => t.name === document.getElementById('symbol2').innerText);
-            if (t1 && t2) outField.value = ((val * t1.price) / t2.price).toFixed(6);
+            
+            if (t1 && t2) {
+                outField.value = ((val * t1.price) / t2.price).toFixed(6);
+            }
         }
 
         document.getElementById('inputAmount1').addEventListener('input', calculateSwap);
@@ -408,11 +477,18 @@
             const t = translations[lang] || translations['EN'];
             document.getElementById('curLang').innerText = lang;
             
-            const navMap = { 'nav-dasbor': 'beranda', 'nav-portofolio': 'portofolio', 'nav-swap': 'swap', 'nav-pools': 'pools', 'nav-stake': 'stake', 'nav-future': 'future' };
-            Object.entries(navMap).forEach(([id, key]) => {
+            const navIds = ['nav-dashboard', 'nav-portfolio', 'nav-swap', 'nav-pools', 'nav-stake', 'nav-future'];
+            const keys = ['dashboard', 'portfolio', 'swap', 'pools', 'stake', 'future'];
+            
+            navIds.forEach((id, i) => {
                 const el = document.getElementById(id);
-                if(id === 'nav-future') el.innerHTML = `${t[key]} <span class="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded ml-1">NEW</span>`;
-                else el.innerText = t[key];
+                const mel = document.getElementById('m-' + id);
+                if(keys[i] === 'future') {
+                    const html = `${t[keys[i]]} <span class="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded ml-1">NEW</span>`;
+                    el.innerHTML = html; mel.innerHTML = html;
+                } else {
+                    el.innerText = t[keys[i]]; mel.innerText = t[keys[i]];
+                }
             });
             
             document.getElementById('mainTitle').innerHTML = t.title;
@@ -430,42 +506,114 @@
             closeAll();
         }
 
-        async function updateTokenBalance(tokenAddress, side) {
-            if (window.ethereum && tokenAddress && userAddress) {
+        async function fetchSingleBalance(token) {
+            if (window.ethereum && userAddress) {
                 try {
                     const provider = new ethers.providers.Web3Provider(window.ethereum);
-                    const abi = ["function balanceOf(address owner) view returns (uint256)", "function decimals() view returns (uint8)"];
-                    const contract = new ethers.Contract(tokenAddress.toLowerCase(), abi, provider);
-                    const [balance, decimals] = await Promise.all([contract.balanceOf(userAddress), contract.decimals()]);
-                    const formatted = parseFloat(ethers.utils.formatUnits(balance, decimals)).toFixed(4);
-                    const balLabel = translations[currentLanguage].balance;
-                    document.getElementById(side === 'input1' ? 'balance1' : 'balance2').innerText = `${balLabel}: ${formatted}`;
-                } catch (e) { console.error(e); }
+                    const abi = [
+                        "function balanceOf(address owner) view returns (uint256)",
+                        "function decimals() view returns (uint8)"
+                    ];
+                    const contract = new ethers.Contract(token.address.toLowerCase(), abi, provider);
+                    
+                    let decimals = 18; 
+                    try {
+                        decimals = await contract.decimals();
+                    } catch (decimalError) {
+                        decimals = (token.name === "USDC" || token.name === "EURC" || token.name === "USDT") ? 6 : 18;
+                    }
+                    
+                    const balance = await contract.balanceOf(userAddress);
+                    return parseFloat(ethers.utils.formatUnits(balance, decimals)).toFixed(4);
+                } catch (e) { 
+                    console.error("Error fetching balance for " + token.name, e);
+                    return "0.0"; 
+                }
+            }
+            return "0.0";
+        }
+
+        async function refreshAllBalances() {
+            const balLabel = translations[currentLanguage].balance;
+            for (let t of arcTestnetTokens) {
+                tokenBalances[t.name] = await fetchSingleBalance(t);
+            }
+            const sym1 = document.getElementById('symbol1').innerText;
+            const sym2 = document.getElementById('symbol2').innerText;
+            document.getElementById('balance1').innerText = `${balLabel}: ${tokenBalances[sym1] || '0.0'}`;
+            document.getElementById('balance2').innerText = `${balLabel}: ${tokenBalances[sym2] || '0.0'}`;
+        }
+
+        function openTokenModal(side) { 
+            activeSide = side; 
+            document.getElementById('tokenSearchInput').value = '';
+            document.getElementById('tokenModal').classList.remove('hidden'); 
+            renderTokenList(arcTestnetTokens); 
+        }
+        
+        function closeTokenModal() { document.getElementById('tokenModal').classList.add('hidden'); }
+        
+        function filterTokens() {
+            const query = document.getElementById('tokenSearchInput').value.trim().toLowerCase();
+            const filtered = arcTestnetTokens.filter(t => t.name.toLowerCase().includes(query) || t.address.toLowerCase().includes(query));
+            renderTokenList(filtered);
+        }
+
+        function makeTokenLogoHTML(name, logo, extraClass = "w-9 h-9 lg:w-10 lg:h-10 text-xs lg:text-sm") {
+            if (logo && logo.trim() !== "") {
+                const isRegar = name === "REGAR" || logo.includes('Adobe');
+                if (isRegar) {
+                    return `<img src="${logo}" class="${extraClass} object-contain scale-125">`;
+                } else {
+                    return `<img src="${logo}" class="${extraClass} object-contain rounded-full scale-110">`;
+                }
+            } else {
+                const letter = name.substring(0, 1).toUpperCase();
+                return `<div class="${extraClass} token-fallback-logo">${letter}</div>`;
             }
         }
 
-        function refreshAllBalances() {
-            const t1 = arcTestnetTokens.find(t => t.name === document.getElementById('symbol1').innerText);
-            const t2 = arcTestnetTokens.find(t => t.name === document.getElementById('symbol2').innerText);
-            if(t1) updateTokenBalance(t1.address, 'input1');
-            if(t2) updateTokenBalance(t2.address, 'input2');
-        }
-
-        function openTokenModal(side) { activeSide = side; document.getElementById('tokenModal').classList.remove('hidden'); renderTokenList(arcTestnetTokens); }
-        function closeTokenModal() { document.getElementById('tokenModal').classList.add('hidden'); }
         function renderTokenList(list) {
-            document.getElementById('tokenList').innerHTML = list.map(t => `
-                <div onclick="selectToken('${t.name}', '${t.logo}', '${t.address}')" class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-[#1f242f] cursor-pointer rounded-2xl transition-all">
-                    <img src="${t.logo}" class="w-10 h-10 rounded-full" onerror="this.src='https://cryptologos.cc/logos/usd-coin-usdc-logo.png'">
-                    <span class="font-bold text-gray-900 dark:text-white">${t.name}</span>
-                </div>
-            `).join('');
+            document.getElementById('tokenList').innerHTML = list.map(t => {
+                const htmlLogo = makeTokenLogoHTML(t.name, t.logo, "w-9 h-9 lg:w-10 lg:h-10 text-xs lg:text-sm");
+                const currentBal = tokenBalances[t.name] || "0.0";
+                const isRegar = t.name === "REGAR";
+                const wrapperClass = isRegar ? "w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center overflow-visible bg-transparent" : "w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center overflow-hidden rounded-full bg-transparent";
+
+                return `
+                    <div onclick="selectToken('${t.name}', '${t.logo}', '${t.address}')" class="flex items-center justify-between p-3 lg:p-4 hover:bg-gray-50 dark:hover:bg-[#1f242f] cursor-pointer rounded-2xl transition-all">
+                        <div class="flex items-center gap-3 lg:gap-4">
+                            <div class="${wrapperClass}">
+                                ${htmlLogo}
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-bold text-sm text-gray-900 dark:text-white">${t.name}</span>
+                                <span class="text-[9px] text-gray-400 font-mono">${t.address.substring(0,4)}...${t.address.substring(t.address.length - 4)}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs lg:text-sm font-bold text-gray-900 dark:text-gray-100">${currentBal}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function selectToken(name, logo, address) {
             const side = activeSide === 'input1' ? 1 : 2;
             document.getElementById('symbol'+side).innerText = name;
-            document.getElementById('logo'+side).src = logo;
+            
+            const container = document.getElementById('wrapperLogo'+side);
+            const isRegar = name === "REGAR";
+            
+            if (isRegar) {
+                container.className = "w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center overflow-visible bg-transparent";
+                container.innerHTML = makeTokenLogoHTML(name, logo, "w-full h-full text-[10px]");
+            } else {
+                container.className = "w-7 h-7 lg:w-8 lg:h-8 flex items-center justify-center overflow-hidden rounded-full bg-transparent";
+                container.innerHTML = makeTokenLogoHTML(name, logo, "w-full h-full text-[10px]");
+            }
+            
             closeTokenModal();
             calculateSwap();
             refreshAllBalances();
@@ -476,36 +624,169 @@
         function showView(id) {
             document.querySelectorAll('main').forEach(m => m.classList.remove('active'));
             document.getElementById('view-'+id).classList.add('active');
+            
             document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
             if(document.getElementById('nav-'+id)) document.getElementById('nav-'+id).classList.add('active');
+            if(document.getElementById('m-nav-'+id)) document.getElementById('m-nav-'+id).classList.add('active');
+            
             if(id === 'swap') refreshAllBalances();
         }
 
         function toggleDrop(id) { closeAll(); document.getElementById(id).style.display = 'block'; }
-        function closeAll() { document.querySelectorAll('.drop-menu').forEach(m => m.style.display = 'none'); }
+        
+        function closeAll() { 
+            document.querySelectorAll('.drop-menu').forEach(m => m.style.display = 'none'); 
+            if(document.getElementById('mobileNavList')) document.getElementById('mobileNavList').style.display = 'none';
+            const icon = document.getElementById('hamburgerIcon');
+            if(icon) icon.className = "fas fa-bars text-lg";
+        }
 
         function flipTokens() {
             const sym1 = document.getElementById('symbol1'), sym2 = document.getElementById('symbol2');
-            const log1 = document.getElementById('logo1'), log2 = document.getElementById('logo2');
+            const wrap1 = document.getElementById('wrapperLogo1'), wrap2 = document.getElementById('wrapperLogo2');
+            
             const tempSym = sym1.innerText; sym1.innerText = sym2.innerText; sym2.innerText = tempSym;
-            const tempLog = log1.src; log1.src = log2.src; log2.src = tempLog;
+            const tempWrap = wrap1.innerHTML; wrap1.innerHTML = wrap2.innerHTML; wrap2.innerHTML = tempWrap;
+            
+            const n1 = sym1.innerText, n2 = sym2.innerText;
+            document.getElementById('wrapperLogo1').className = (n1 === "REGAR") ? "w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center overflow-visible bg-transparent" : "w-7 h-7 lg:w-8 lg:h-8 flex items-center justify-center overflow-hidden rounded-full bg-transparent";
+            document.getElementById('wrapperLogo2').className = (n2 === "REGAR") ? "w-9 h-9 lg:w-10 lg:h-10 flex items-center justify-center overflow-visible bg-transparent" : "w-7 h-7 lg:w-8 lg:h-8 flex items-center justify-center overflow-hidden rounded-full bg-transparent";
+
             calculateSwap();
             refreshAllBalances();
         }
 
+        // ==================== BACKGROUND ANIMATION (3D ISOMETRIC NODE CHAINS) ====================
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         function init() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        class P { constructor() { this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.sx=Math.random()-0.5; this.sy=Math.random()-0.5; } update() { this.x+=this.sx; this.y+=this.sy; if(this.x<0||this.x>canvas.width)this.sx*=-1; if(this.y<0||this.y>canvas.height)this.sy*=-1; } draw() { ctx.fillStyle='#5c3bb1'; ctx.beginPath(); ctx.arc(this.x,this.y,1,0,Math.PI*2); ctx.fill(); } }
-        let pts = Array.from({length:40}, () => new P());
-        function anim() { ctx.clearRect(0,0,canvas.width,canvas.height); pts.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(anim); }
+        
+        class BlockchainCube3D {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.z = Math.random() * 300 - 150; 
+                this.size = Math.random() * 6 + 7; 
+                this.speedX = (Math.random() - 0.5) * 0.35;
+                this.speedY = (Math.random() - 0.5) * 0.35;
+                this.speedZ = (Math.random() - 0.5) * 0.15;
+                
+                this.angleX = Math.random() * Math.PI;
+                this.angleY = Math.random() * Math.PI;
+                this.rotSpeedX = Math.random() * 0.008 + 0.004;
+                this.rotSpeedY = Math.random() * 0.008 + 0.004;
+
+                this.vertices = [
+                    {x: -1, y: -1, z: -1}, {x: 1, y: -1, z: -1},
+                    {x: 1, y: 1, z: -1},  {x: -1, y: 1, z: -1},
+                    {x: -1, y: -1, z: 1},  {x: 1, y: -1, z: 1},
+                    {x: 1, y: 1, z: 1},   {x: -1, y: 1, z: 1}
+                ];
+
+                this.edges = [
+                    [0, 1], [1, 2], [2, 3], [3, 0], 
+                    [4, 5], [5, 6], [6, 7], [7, 4], 
+                    [0, 4], [1, 5], [2, 6], [3, 7]  
+                ];
+            }
+
+            update() {
+                this.x += this.speedX; 
+                this.y += this.speedY;
+                this.z += this.speedZ;
+                
+                this.angleX += this.rotSpeedX;
+                this.angleY += this.rotSpeedY;
+
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                if (this.z < -150 || this.z > 150) this.speedZ *= -1;
+            }
+
+            getProjectedVertices() {
+                let projected = [];
+                let fov = 350; 
+
+                for (let vertex of this.vertices) {
+                    let x1 = vertex.x * this.size;
+                    let y1 = vertex.y * this.size;
+                    let z1 = vertex.z * this.size;
+
+                    let y2 = y1 * Math.cos(this.angleX) - z1 * Math.sin(this.angleX);
+                    let z2 = y1 * Math.sin(this.angleX) + z1 * Math.cos(this.angleX);
+
+                    let x3 = x1 * Math.cos(this.angleY) + z2 * Math.sin(this.angleY);
+                    let z3 = -x1 * Math.sin(this.angleY) + z2 * Math.cos(this.angleY);
+
+                    let scale = fov / (fov + z3 + this.z);
+                    let finalX = this.x + x3 * scale;
+                    let finalY = this.y + y2 * scale;
+
+                    projected.push({x: finalX, y: finalY});
+                }
+                return projected;
+            }
+
+            draw() {
+                const projected = this.getProjectedVertices();
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                
+                ctx.strokeStyle = isDarkMode ? 'rgba(147, 51, 234, 0.6)' : 'rgba(92, 59, 177, 0.35)';
+                ctx.lineWidth = 1.0;
+
+                for (let edge of this.edges) {
+                    let p1 = projected[edge[0]];
+                    let p2 = projected[edge[1]];
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        let cubes = Array.from({length: window.innerWidth < 768 ? 16 : 38}, () => new BlockchainCube3D());
+
+        function drawNetworkChains() {
+            const maxDistance = window.innerWidth < 768 ? 160 : 280; 
+            const isDarkMode = document.body.classList.contains('dark-mode');
+
+            for (let i = 0; i < cubes.length; i++) {
+                for (let j = i + 1; j < cubes.length; j++) {
+                    const dx = cubes[i].x - cubes[j].x;
+                    const dy = cubes[i].y - cubes[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        const alpha = (1 - distance / maxDistance) * (isDarkMode ? 0.45 : 0.22);
+                        ctx.strokeStyle = isDarkMode ? `rgba(139, 92, 246, ${alpha})` : `rgba(92, 59, 177, ${alpha})`;
+                        ctx.lineWidth = 0.9;
+                        ctx.beginPath(); 
+                        ctx.moveTo(cubes[i].x, cubes[i].y); 
+                        ctx.lineTo(cubes[j].x, cubes[j].y); 
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        function anim() { 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            drawNetworkChains(); 
+            cubes.forEach(c => { c.update(); c.draw(); }); 
+            requestAnimationFrame(anim); 
+        }
         
         window.onload = () => {
             init(); anim(); if(web3Modal.cachedProvider) connectWallet();
             checkNetwork();
-            const content = arcTestnetTokens.map(t => `<div class="token-card"><img src="${t.logo}" class="w-5 h-5 rounded-full" onerror="this.src='https://cryptologos.cc/logos/usd-coin-usdc-logo.png'"><span class="font-bold text-xs">${t.name}</span></div>`).join('');
-            document.getElementById('marqueeList1').innerHTML = content.repeat(10);
-            document.getElementById('marqueeList2').innerHTML = content.repeat(10);
+            
+            const content = arcTestnetTokens.map(t => {
+                const tokenLogoMarquee = makeTokenLogoHTML(t.name, t.logo, "w-4 h-4 text-[8px]");
+                return `<div class="token-card"><div class="w-4 h-4 flex items-center justify-center overflow-hidden rounded-full">${tokenLogoMarquee}</div><span class="font-bold text-[10px]">${t.name}</span></div>`;
+            }).join('');
+            document.getElementById('marqueeList1').innerHTML = content.repeat(6);
+            document.getElementById('marqueeList2').innerHTML = content.repeat(6);
         };
         window.onresize = init;
     </script>
