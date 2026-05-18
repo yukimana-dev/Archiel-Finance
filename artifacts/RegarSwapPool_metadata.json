@@ -16,6 +16,56 @@
 					{
 						"indexed": true,
 						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "provider",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "LiquidityDeposited",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "LiquidityWithdrawn",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
 						"name": "user",
 						"type": "address"
 					},
@@ -46,6 +96,24 @@
 				],
 				"name": "SwapExecuted",
 				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "depositLiquidity",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -108,8 +176,20 @@
 			}
 		],
 		"devdoc": {
+			"details": "A simple liquidity pool contract for execution of token swaps and liquidity management.",
 			"kind": "dev",
-			"methods": {},
+			"methods": {
+				"depositLiquidity(address,uint256)": {
+					"details": "Allows the owner to inject liquidity into the pool via backend transferFrom. Use this method to bypass native testnet token direct transfer restrictions."
+				},
+				"executeSwap(address,address,uint256,uint256)": {
+					"details": "Executes a peer-to-contract swap between two ERC20 tokens."
+				},
+				"withdrawToken(address,uint256)": {
+					"details": "Allows the contract owner to safely withdraw pool funds."
+				}
+			},
+			"title": "RegarSwapPool",
 			"version": 1
 		},
 		"userdoc": {
@@ -120,7 +200,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"RegarSwapPool.sol": "ArchielSwapPool"
+			"RegarSwapPool.sol": "RegarSwapPool"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -135,11 +215,11 @@
 	},
 	"sources": {
 		"RegarSwapPool.sol": {
-			"keccak256": "0x5f983658a7cb072a95cb39d911c4e8f26915f5c17a7987dd3a38685a5787f91b",
+			"keccak256": "0x06bfa947485fef700523219808c92303bb68127459a7af0928c8ea4e63a79711",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fd08401d98b0308595b001ba91a8d853fd905d38f9c2db51614584396fb806ea",
-				"dweb:/ipfs/QmVBhMrcQMCgqKRHTgs9nxd8mrnJ14eF32LL9LZYwK3H2o"
+				"bzz-raw://c90f03a582b115d2b277d47d9c7ee4536ac34fdfe28304744fd0b75163d55593",
+				"dweb:/ipfs/QmcECR1A4WmBmHVVTbUXzf9bACvGrCpfPppPJ6NHiFTSD1"
 			]
 		}
 	},

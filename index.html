@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siregar Finance | Infinite Token Flow</title>
+    <title>Archiel Finance | Infinite Token Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -124,7 +124,7 @@
             <div class="bottom-branding">
                 <div id="footerLabel" class="sub-footer-label uppercase">THE NEW STANDARD OF FINANCE</div>
                 <h2 id="footerTitle" class="hero-footer arc-brand-gradient">Elegance In Decentralization</h2>
-                <footer class="text-[9px] font-bold text-gray-400 tracking-[0.3em] uppercase">© 2026 SIREGAR FINANCE . ALL RIGHTS RESERVED</footer>
+                <footer class="text-[9px] font-bold text-gray-400 tracking-[0.3em] uppercase">© 2026 ARCHIEL FINANCE . ALL RIGHTS RESERVED</footer>
             </div>
         </div>
     </main>
@@ -194,8 +194,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.12/dist/index.min.js"></script>
 
     <script>
-        // MASUKKAN ALAMAT KONTRAK POOL ANDA YANG SUDAH DIDEPLOY DI REMIX IDE KE SINI
-        const CONTRACT_POOL_ADDRESS = "0xYOUR_DEPLOYED_POOL_ADDRESS_HERE"; 
+        const CONTRACT_POOL_ADDRESS = "0xFe209B46c3BAA177bCcba0F719368A63ee6f3Cb2"; 
 
         const ARC_CONFIG = {
             chainId: '0x4CEF52', 
@@ -310,55 +309,83 @@
             const symbol2 = document.getElementById('symbol2').innerText;
             
             if(!amount1 || amount1 <= 0) {
-                return alert(currentLanguage === 'ID' ? "Masukkan jumlah token!" : "Please enter token amount!");
+                return alert("Please enter token amount!");
             }
             if(!userAddress) {
-                return alert(currentLanguage === 'ID' ? "Koneksikan dompet dahulu!" : "Please connect your wallet first!");
-            }
-            if(CONTRACT_POOL_ADDRESS === "0xYOUR_DEPLOYED_POOL_ADDRESS_HERE") {
-                return alert("Please update CONTRACT_POOL_ADDRESS inside script with your Remix address!");
+                return alert("Please connect your wallet first!");
             }
 
             const tokenIn = arcTestnetTokens.find(t => t.name === symbol1);
+            const tokenOut = arcTestnetTokens.find(t => t.name === symbol2);
 
             try {
-                btn.innerText = currentLanguage === 'ID' ? "Menunggu Konfirmasi Dompet..." : "Awaiting Wallet Confirmation...";
+                btn.innerText = "Awaiting Confirmation...";
                 btn.disabled = true;
 
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
-                let txResponse;
-
-                if (symbol1 === "USDC") {
-                    const tx = {
-                        to: CONTRACT_POOL_ADDRESS,
-                        value: ethers.utils.parseEther(amount1),
-                        gasLimit: 150000
-                    };
-                    txResponse = await signer.sendTransaction(tx);
-                } else {
-                    const tokenABI = ["function transfer(address to, uint256 amount) public returns (bool)"];
-                    const tokenContract = new ethers.Contract(tokenIn.address, tokenABI, signer);
-                    const amountInWei = ethers.utils.parseUnits(amount1, 18);
-                    txResponse = await tokenContract.transfer(CONTRACT_POOL_ADDRESS, amountInWei);
+                
+                const genericABI = [
+                    "function decimals() view returns (uint8)",
+                    "function approve(address spender, uint256 amount) public returns (bool)"
+                ];
+                const contractTokenIn = new ethers.Contract(tokenIn.address.toLowerCase(), genericABI, signer);
+                
+                let decimalIn = 18;
+                try {
+                    decimalIn = await contractTokenIn.decimals();
+                } catch(e) {
+                    decimalIn = (symbol1 === "USDC" || symbol1 === "EURC" || symbol1 === "USDT") ? 6 : 18;
                 }
 
-                btn.innerText = currentLanguage === 'ID' ? "Memproses di Arc Network..." : "Processing on Arc Network...";
+                // dynamic conversion according to genuine token decimals
+                const amountInUnits = ethers.utils.parseUnits(amount1, decimalIn);
+                const amountOutUnits = ethers.utils.parseUnits(amount2, 6); 
+
+                const poolABI = [
+                    "function executeSwap(address _tokenIn, address _tokenOut, uint256 _amountIn, uint256 _amountOut) external"
+                ];
+                const poolContract = new ethers.Contract(CONTRACT_POOL_ADDRESS, poolABI, signer);
+
+                btn.innerText = "Approving Token...";
+                const approveTx = await contractTokenIn.approve(CONTRACT_POOL_ADDRESS, amountInUnits);
+                await approveTx.wait();
+
+                btn.innerText = "Executing Swap...";
+                
+                let gasEstimate;
+                try {
+                    gasEstimate = await poolContract.estimateGas.executeSwap(
+                        tokenIn.address.toLowerCase(),
+                        tokenOut.address.toLowerCase(),
+                        amountInUnits,
+                        amountOutUnits
+                    );
+                } catch(err) {
+                    console.warn("Gas estimation failed, using fallback.", err);
+                    gasEstimate = ethers.BigNumber.from("300000");
+                }
+
+                const txResponse = await poolContract.executeSwap(
+                    tokenIn.address.toLowerCase(),
+                    tokenOut.address.toLowerCase(),
+                    amountInUnits,
+                    amountOutUnits,
+                    { gasLimit: gasEstimate.add(20000) }
+                );
+
+                btn.innerText = "Processing on Arc Network...";
                 await txResponse.wait();
 
-                if (currentLanguage === 'ID') {
-                    alert(`Swap Berhasil!\n${amount1} ${symbol1} telah dikonversi ke ${amount2} ${symbol2} melalui rute likuiditas Archiel Pool.`);
-                } else {
-                    alert(`Swap Successful!\n${amount1} ${symbol1} converted to ${amount2} ${symbol2} via Archiel Pool liquidity route.`);
-                }
+                alert(`Swap Successful!\n${amount1} ${symbol1} successfully swapped to ${symbol2} via ArchielSwapPool.`);
                 
                 document.getElementById('inputAmount1').value = '';
                 document.getElementById('inputAmount2').value = '';
 
-                setTimeout(() => { refreshAllBalances(); }, 3000);
+                setTimeout(() => { refreshAllBalances(); }, 2000);
             } catch(e) {
-                console.error(e);
-                alert(currentLanguage === 'ID' ? "Transaksi Gagal atau Dibatalkan." : "Transaction Failed or Canceled.");
+                console.error("Transaction Error Detail:", e);
+                alert("Transaction Failed or Canceled. Check your token/gas balance!");
             } finally {
                 btn.innerText = translations[currentLanguage].doSwap;
                 btn.disabled = false;
@@ -408,7 +435,7 @@
                 try {
                     const provider = new ethers.providers.Web3Provider(window.ethereum);
                     const abi = ["function balanceOf(address owner) view returns (uint256)", "function decimals() view returns (uint8)"];
-                    const contract = new ethers.Contract(tokenAddress, abi, provider);
+                    const contract = new ethers.Contract(tokenAddress.toLowerCase(), abi, provider);
                     const [balance, decimals] = await Promise.all([contract.balanceOf(userAddress), contract.decimals()]);
                     const formatted = parseFloat(ethers.utils.formatUnits(balance, decimals)).toFixed(4);
                     const balLabel = translations[currentLanguage].balance;

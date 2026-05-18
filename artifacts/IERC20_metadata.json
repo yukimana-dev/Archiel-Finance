@@ -9,6 +9,30 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "approve",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "account",
 						"type": "address"
 					}
@@ -22,59 +46,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "transfer",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "transferFrom",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -91,7 +62,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"RegarSwapPool.sol": "IERC20"
+			"IUSDCToken.sol": "IERC20"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -105,12 +76,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"RegarSwapPool.sol": {
-			"keccak256": "0x02300c52f05e4c682ce1875e38eb51aa3a40e663d3ba998fd09873f1be34ccca",
+		"IUSDCToken.sol": {
+			"keccak256": "0x201328b389b786932b88f89e527c28e92aa1c96d2cfe77732e21e3904b6c2634",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c5e64f420ead2f4ce893f5f1e330c9d927cfff16304b06e092a2e27c7cbd9cbb",
-				"dweb:/ipfs/Qmbc9gobywhTrsEK5bccN7giqeyeJfe12zgGT6qRq6teHE"
+				"bzz-raw://932883c19f16cd9e81b32ba09e4b04fdf6960f014bf6efeaaa5bb06bd241874f",
+				"dweb:/ipfs/Qme3dN5fhgGTAdtgMwhkXgrPzHbM62gn6WvqnP83jjDDGw"
 			]
 		}
 	},
