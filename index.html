@@ -400,7 +400,7 @@
                 const amountInUnits = ethers.utils.parseUnits(fixedAmount1, decimalIn);
                 const amountOutUnits = ethers.utils.parseUnits(fixedAmount2, decimalOut); 
 
-                const poolABI = ["function executeSwap(address _tokenIn, address _tokenOut, uint256 _amountIn, uint226 _amountOut) external"];
+                const poolABI = ["function executeSwap(address _tokenIn, address _tokenOut, uint256 _amountIn, uint256 _amountOut) external"];
                 const poolContract = new ethers.Contract(CONTRACT_POOL_ADDRESS, poolABI, signer);
 
                 btn.innerText = "Checking Allowance...";
