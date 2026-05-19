@@ -83,7 +83,7 @@
 
         <nav class="hidden lg:flex gap-8" id="mainNav">
             <a onclick="showView('dashboard')" id="nav-dashboard" class="nav-link active">HOME</a>
-            <a onclick="showView('portfolio')" id="nav-portofolio" class="nav-link">PORTOFOLIO</a>
+            <a onclick="showView('portfolio')" id="nav-portfolio" class="nav-link">PORTFOLIO</a>
             <a onclick="showView('swap')" id="nav-swap" class="nav-link">SWAP</a>
             <a onclick="showView('pools')" id="nav-pools" class="nav-link">POOLS</a>
             <a onclick="showView('stake')" id="nav-stake" class="nav-link">STAKE</a>
@@ -110,7 +110,7 @@
                 <div id="langMenu" class="drop-menu">
                     <div class="lang-item" onclick="setLang('EN')">🇺🇸 EN</div>
                     <div class="lang-item" onclick="setLang('ID')">🇮🇩 ID</div>
-                    <div class="lang-item" onclick="setLang('MD')">ᴍ¯ MD</div>
+                    <div class="lang-item" onclick="setLang('MD')">ᴍ¯ᴅ MD</div>
                     <div class="lang-item" onclick="setLang('JP')">🇯🇵 JP</div>
                     <div class="lang-item" onclick="setLang('AR')">🇸🇦 AR</div>
                 </div>
@@ -229,7 +229,7 @@
                     <h2 id="poolsTitleText" class="text-xl lg:text-2xl font-bold tracking-tight">Liquidity Pools</h2>
                     <p id="poolsDescText" class="text-xs lg:text-sm text-gray-500 dark:text-gray-400 mt-1">Deposit tokens into pools to facilitate decentralized swaps and earn incentives.</p>
                 </div>
-                <div onclick="openCreatePoolModal()" class="ui-pill !bg-indigo-600 !text-white !border-none self-start lg:self-center px-4 py-2.5 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all">
+                <div class="ui-pill !bg-indigo-600 !text-white !border-none self-start lg:self-center px-4 py-2.5 rounded-xl font-bold shadow-md">
                     <i class="fas fa-plus mr-1.5"></i> Create Pool
                 </div>
             </div>
@@ -259,35 +259,48 @@
         </div>
     </div>
 
-    <div id="createPoolModal" class="fixed inset-0 z-[2000] hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onclick="closeCreatePoolModal()">
-        <div class="bg-white dark:bg-[#161b26] w-full max-w-[450px] rounded-[24px] lg:rounded-[32px] overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
-            <div class="p-5 border-b dark:border-gray-800 flex justify-between items-center">
-                <h3 class="font-bold text-base lg:text-lg">Create New Liquidity Pool</h3>
-                <i onclick="closeCreatePoolModal()" class="fas fa-times cursor-pointer p-2 text-gray-400 hover:bg-gray-100 rounded-full"></i>
+    <div id="liquidityModal" class="fixed inset-0 z-[2000] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="bg-white dark:bg-[#161b26] w-full max-w-[440px] rounded-[24px] lg:rounded-[32px] overflow-hidden shadow-2xl p-6 border border-gray-100 dark:border-gray-800" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="font-bold text-base lg:text-lg" id="liqModalTitle">Add Liquidity</h3>
+                <i onclick="closeLiquidityModal()" class="fas fa-times cursor-pointer p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-all"></i>
             </div>
-            <div class="p-5 space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">TOKEN A CONTRACT ADDRESS</label>
-                    <input type="text" id="newPoolTokenA" placeholder="0x..." class="w-full bg-gray-50 dark:bg-[#1f242f] border dark:border-gray-800 rounded-xl p-3 text-xs font-mono outline-none focus:border-indigo-500">
+
+            <div class="bg-gray-50 dark:bg-[#1f242f] rounded-2xl p-4 mb-3 border border-transparent hover:border-indigo-500 transition-all">
+                <div class="flex justify-between mb-1.5 text-xs font-bold text-gray-500 dark:text-gray-400">
+                    <span id="liqLabelDepositA">Deposit Amount</span>
+                    <span id="liqBalanceA">Balance: 0.0</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">TOKEN B CONTRACT ADDRESS</label>
-                    <input type="text" id="newPoolTokenB" placeholder="0x..." class="w-full bg-gray-50 dark:bg-[#1f242f] border dark:border-gray-800 rounded-xl p-3 text-xs font-mono outline-none focus:border-indigo-500">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 mb-1">AMOUNT TOKEN A</label>
-                        <input type="number" id="newPoolAmountA" placeholder="0.0" class="w-full bg-gray-50 dark:bg-[#1f242f] border dark:border-gray-800 rounded-xl p-3 text-xs font-bold outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 mb-1">AMOUNT TOKEN B</label>
-                        <input type="number" id="newPoolAmountB" placeholder="0.0" class="w-full bg-gray-50 dark:bg-[#1f242f] border dark:border-gray-800 rounded-xl p-3 text-xs font-bold outline-none focus:border-indigo-500">
+                <div class="flex justify-between items-center gap-2">
+                    <input type="number" id="inputLiqAmountA" placeholder="0.0" class="bg-transparent text-xl font-bold outline-none w-1/2 text-gray-900 dark:text-white">
+                    <div class="bg-white dark:bg-[#2d333f] shadow-sm rounded-xl px-3 py-1.5 flex items-center gap-2 font-bold text-sm text-gray-800 dark:text-gray-200">
+                        <span id="liqTokenASymbol">USDC</span>
                     </div>
                 </div>
-                <button id="executeCreatePoolBtn" onclick="submitCreatePoolOnChain()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-md transition-all">
-                    Initialize Pool On-Chain
-                </button>
             </div>
+
+            <div class="flex justify-center my-1">
+                <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-[#1f242f] flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-xs font-bold border border-transparent dark:border-gray-800 shadow-sm">
+                    <i class="fas fa-plus"></i>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-[#1f242f] rounded-2xl p-4 mb-6 border border-transparent hover:border-indigo-500 transition-all">
+                <div class="flex justify-between mb-1.5 text-xs font-bold text-gray-500 dark:text-gray-400">
+                    <span id="liqLabelDepositB">Deposit Amount</span>
+                    <span id="liqBalanceB">Balance: 0.0</span>
+                </div>
+                <div class="flex justify-between items-center gap-2">
+                    <input type="number" id="inputLiqAmountB" placeholder="0.0" class="bg-transparent text-xl font-bold outline-none w-1/2 text-gray-900 dark:text-white">
+                    <div class="bg-white dark:bg-[#2d333f] shadow-sm rounded-xl px-3 py-1.5 flex items-center gap-2 font-bold text-sm text-gray-800 dark:text-gray-200">
+                        <span id="liqTokenBSymbol">REGAR</span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="confirmLiqBtn" onclick="executeAddLiquidity()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg active:scale-95 transition-all cursor-pointer">
+                Confirm Supply
+            </button>
         </div>
     </div>
 
@@ -312,21 +325,21 @@
         const tokenBalances = { "USDC": "0.0", "REGAR": "0.0", "EURC": "0.0", "USDT": "0.0", "WAWA": "0.0" };
 
         const arcTestnetTokens = [
-            { name: "USDC", cgId: "usd-coin", address: "0x3600000000000000000000000000000000000000", logo: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png", price: 1.00, decimals: 6 },
-            { name: "REGAR", cgId: null, address: "0x18C6B42c586A49c18bf151cf9944f4fDCa6FE61D", logo: "Adobe Express - file (1)_2.png", price: 0.5, decimals: 18 },
-            { name: "EURC", cgId: "euro-coin", address: "0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a", logo: "eurc.png", price: 1.08, decimals: 6 },
-            { name: "USDT", cgId: "tether", address: "0x175CdB1D338945f0D851A741ccF787D343E57952", logo: "https://cryptologos.cc/logos/tether-usdt-logo.png", price: 1.00, decimals: 6 },
-            { name: "WAWA", cgId: null, address: "0x275CdB1D338945f0D851A741ccF787D343E57953", logo: "", price: 0.20, decimals: 18 }
+            { name: "USDC", cgId: "usd-coin", address: "0x3600000000000000000000000000000000000000", logo: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png", price: 1.00 },
+            { name: "REGAR", cgId: null, address: "0x18C6B42c586A49c18bf151cf9944f4fDCa6FE61D", logo: "Adobe Express - file (1)_2.png", price: 0.5 },
+            { name: "EURC", cgId: "euro-coin", address: "0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a", logo: "eurc.png", price: 1.08 },
+            { name: "USDT", cgId: "tether", address: "0x175CdB1D338945f0D851A741ccF787D343E57952", logo: "https://cryptologos.cc/logos/tether-usdt-logo.png", price: 1.00 },
+            { name: "WAWA", cgId: null, address: "0x275CdB1D338945f0D851A741ccF787D343E57953", logo: "", price: 0.20 }
         ];
 
         let activeSide = '';
 
         const translations = {
-            ID: { dashboard: "BERANDA", portfolio: "PORTOFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE", title: "Masa Depan Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>di Arc Network</span>", desc: "Nikmati pengalaman DeFi kelas dunia dengan keamanan institusional dan efisiensi teknologi Arc Network yang tak ternandingi", btn: "Mulai Sekarang", footer: "Elegansi Dalam Desentralisasi", dari: "Dari", ke: "Ke", doSwap: "Swap Sekarang", pToken: "Pilih Token", balance: "Saldo", selectNet: "Pilih Jaringan", pTitle: "Kolam Likuiditas", pDesc: "Titipkan token Anda ke dalam pool untuk mendukung swap terdesentralisasi dan dapatkan insentif." },
-            MD: { dashboard: "PARADE", portfolio: "PORTOFOLIO", swap: "TUKAR", pools: "KOLAM", stake: "STAKE", future: "MASO Depan", title: "Maso Depan Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>i Arc Network</span>", desc: "Dapotkon pangalaman DeFi kelas dunia mardongan kaamanan institusional dot efisiensi teknologi Arc Network na soada tudosanna", btn: "Mulaian Sannari", footer: "Elegansi Bagasan Desentralisasi", dari: "Sian", ke: "Tu", doSwap: "Tukarkon Sannari", pToken: "Pili Token", balance: "Saldo", selectNet: "Pili Network", pTitle: "Kolam Likuiditas", pDesc: "Baen token mu tu bagasan pool lapatanna mangurupi swap nasonang jala dapot untung." },
-            EN: { dashboard: "HOME", portfolio: "PORTFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE", title: "The Future of Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>on Arc Network</span>", desc: "Experience world-class DeFi with institutional security and the unparalleled efficiency of Arc Network technology", btn: "Start Now", footer: "Elegance In Decentralization", dari: "From", ke: "To", doSwap: "Swap Now", pToken: "Select Token", balance: "Balance", selectNet: "Select Network", pTitle: "Liquidity Pools", pDesc: "Deposit tokens into pools to facilitate decentralized swaps and earn incentives." },
-            JP: { dashboard: "ホーム", portfolio: "ポートフォリオ", swap: "スワップ", pools: "プール", stake: "ステーク", future: "未来", title: "Arc Networkにおける<br><span class='arc-brand-gradient'>DeFi of Future</span>", desc: "Arc Network技術の類い稀なる効率 och、機関投資家レベルのセキュリティを備えたワールドクラスのDeFiを体験してください", btn: "いますぐ始める", footer: "分散型における洗練さ", dari: "から", ke: "へ", doSwap: "スワップする", pToken: "トークンを選択", balance: "残高", selectNet: "ネットワーク選択", pTitle: "流動性プール", pDesc: "プールにトークンを預け入れて分散型スワップを促進し、インセンティブを獲得します。" },
-            AR: { dashboard: "الرئيسية", portfolio: "المحفظة", swap: "التبديل", pools: "الأحواض", stake: "الرهن", future: "مستقبل", title: "مستقبل التمويل اللامركزي<br><span class='arc-brand-gradient'>على شبكة Arc</span>", desc: "استمتع بتجربة DeFi عالمية المستوى مع أمان مؤسسي وكفاءة لا مثيل لها من تقنية Arc Network", btn: "ابدأ الآن", footer: "الأناقة في اللامركزية", dari: "من", ke: "إلى", doSwap: "تبديل الآن", pToken: "اختر العملة", balance: "الرصيد", selectNet: "اختر الشبكة", pTitle: "أحواض السيولة", pDesc: "قم بإيداع العملات في الأحواض لتسهيل التبادلات اللامركزية وكسب الحوافز." }
+            ID: { dashboard: "BERANDA", portfolio: "PORTOFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE", title: "Masa Depan Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>di Arc Network</span>", desc: "Nikmati pengalaman DeFi kelas dunia dengan keamanan institusional dan efisiensi teknologi Arc Network yang tak ternandingi", btn: "Mulai Sekarang", footer: "Elegansi Dalam Desentralisasi", dari: "Dari", ke: "Ke", doSwap: "Swap Sekarang", pToken: "Pilih Token", balance: "Saldo", selectNet: "Pilih Jaringan", pTitle: "Kolam Likuiditas", pDesc: "Titipkan token Anda ke dalam pool untuk mendukung swap terdesentralisasi dan dapatkan insentif.", liqTitle: "Tambah Likuiditas", liqDeposit: "Jumlah Setoran", liqConfirm: "Konfirmasi Setoran" },
+            MD: { dashboard: "PARADE", portfolio: "PORTOFOLIO", swap: "TUKAR", pools: "KOLAM", stake: "STAKE", future: "MASO JOLO", title: "Masa Jolo Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>i Arc Network</span>", desc: "Dapotkon pangalaman DeFi kelas dunia mardongan kaamanan institusional dot efisiensi teknologi Arc Network na soada tudosanna", btn: "Mulaian Sannari", footer: "Elegansi Bagasan Desentralisasi", dari: "Sian", ke: "Tu", doSwap: "Tukarkon Sannari", pToken: "Pili Token", balance: "Saldo", selectNet: "Pili Network", pTitle: "Kolam Likuiditas", pDesc: "Baen token mu tu bagasan pool lapatanna mangurupi swap nasonang jala dapot untung.", liqTitle: "Tambah Likuiditas", liqDeposit: "Godang ni Setoran", liqConfirm: "Konfirmasi Sannari" },
+            EN: { dashboard: "HOME", portfolio: "PORTFOLIO", swap: "SWAP", pools: "POOLS", stake: "STAKE", future: "FUTURE", title: "The Future of Decentralized Finance (DeFi)<br><span class='arc-brand-gradient'>on Arc Network</span>", desc: "Experience world-class DeFi with institutional security and the unparalleled efficiency of Arc Network technology", btn: "Start Now", footer: "Elegance In Decentralization", dari: "From", ke: "To", doSwap: "Swap Now", pToken: "Select Token", balance: "Balance", selectNet: "Select Network", pTitle: "Liquidity Pools", pDesc: "Deposit tokens into pools to facilitate decentralized swaps and earn incentives.", liqTitle: "Add Liquidity", liqDeposit: "Deposit Amount", liqConfirm: "Confirm Supply" },
+            JP: { dashboard: "ホーム", portfolio: "ポートフォリオ", swap: "スワップ", pools: "プール", stake: "ステーク", future: "未来", title: "Arc Networkにおける<br><span class='arc-brand-gradient'>DeFi of Future</span>", desc: "Arc Network技術の類い稀なる効率 og 、機関投資家レベルのセキュリティを備えたワールドクラスのDeFiを体験してください", btn: "いますぐ始める", footer: "分散型における洗練さ", dari: "から", ke: "へ", doSwap: "スワップする", pToken: "トークンを選択", balance: "残高", selectNet: "ネットワーク選択", pTitle: "流動性プール", pDesc: "プールにトークンを預け入れて分散型スワップを促進し、インセンティブを獲得します。", liqTitle: "流動性を追加", liqDeposit: "入金額", liqConfirm: "供給を確認" },
+            AR: { dashboard: "الرئيسية", portfolio: "المحفظة", swap: "التبديل", pools: "الأحواض", stake: "الرهن", future: "مستقبل", title: "مستقبل التمويل اللامركزي<br><span class='arc-brand-gradient'>على شبكة Arc</span>", desc: "استمتع بتجربة DeFi عالمية المستوى مع أمان مؤسسي وكفاءة لا مثيل لها من تقنية Arc Network", btn: "ابدأ الآن", footer: "الأناقة في اللامركزية", dari: "من", ke: "إلى", doSwap: "تبديل الآن", pToken: "اختر العملة", balance: "الرصيد", selectNet: "اختر الشبكة", pTitle: "أحواض السيولة", pDesc: "قم بإيداع العملات في الأحواض لتسهيل التبادلات اللامركزية وكسب الحوافز.", liqTitle: "إضافة سيولة", liqDeposit: "قيمة الإيداع", liqConfirm: "تأكيد التزويد" }
         };
 
         async function updatePricesFromAPI() {
@@ -497,8 +510,8 @@
                 
                 const contractTokenIn = new ethers.Contract(tokenIn.address.toLowerCase(), genericABI, signer);
 
-                let decimalIn = tokenIn.decimals || 18; 
-                let decimalOut = tokenOut.decimals || 18;
+                let decimalIn = 18; 
+                let decimalOut = 18;
 
                 const fixedAmount1 = Number(amount1).toFixed(decimalIn);
                 const fixedAmount2 = Number(amount2).toFixed(decimalOut);
@@ -596,6 +609,11 @@
             
             document.getElementById('poolsTitleText').innerText = t.pTitle;
             document.getElementById('poolsDescText').innerText = t.pDesc;
+
+            document.getElementById('liqModalTitle').innerText = t.liqTitle || "Add Liquidity";
+            document.getElementById('liqLabelDepositA').innerText = t.liqDeposit || "Deposit Amount";
+            document.getElementById('liqLabelDepositB').innerText = t.liqDeposit || "Deposit Amount";
+            document.getElementById('confirmLiqBtn').innerText = t.liqConfirm || "Confirm Supply";
             
             checkNetwork();
             refreshAllBalances();
@@ -612,7 +630,7 @@
                     const abi = ["function balanceOf(address owner) view returns (uint256)"];
                     const contract = new ethers.Contract(token.address.toLowerCase(), abi, provider);
                     
-                    let decimals = token.decimals || 18;
+                    let decimals = 18;
                     const balance = await contract.balanceOf(userAddress);
                     return parseFloat(ethers.utils.formatUnits(balance, decimals)).toFixed(4);
                 } catch (e) { 
@@ -630,8 +648,8 @@
             }
             const sym1 = document.getElementById('symbol1').innerText;
             const sym2 = document.getElementById('symbol2').innerText;
-            if(document.getElementById('balance1')) document.getElementById('balance1').innerText = `${balLabel}: ${tokenBalances[sym1] || '0.0'}`;
-            if(document.getElementById('balance2')) document.getElementById('balance2').innerText = `${balLabel}: ${tokenBalances[sym2] || '0.0'}`;
+            document.getElementById('balance1').innerText = `${balLabel}: ${tokenBalances[sym1] || '0.0'}`;
+            document.getElementById('balance2').innerText = `${balLabel}: ${tokenBalances[sym2] || '0.0'}`;
         }
 
         async function renderPoolsSection() {
@@ -667,9 +685,9 @@
                     ]);
 
                     poolLiquidityData = [
-                        { tokenA: "USDC", tokenB: "REGAR", amountA: parseFloat(ethers.utils.formatUnits(bUSDC, usdcToken.decimals)).toFixed(2), amountB: parseFloat(ethers.utils.formatUnits(bREGAR, regarToken.decimals)).toFixed(2), apr: "48.2%" },
-                        { tokenA: "USDC", tokenB: "EURC", amountA: parseFloat(ethers.utils.formatUnits(bUSDC, usdcToken.decimals)).toFixed(2), amountB: parseFloat(ethers.utils.formatUnits(bEURC, eurcToken.decimals)).toFixed(2), apr: "12.4%" },
-                        { tokenA: "USDC", tokenB: "USDT", amountA: parseFloat(ethers.utils.formatUnits(bUSDC, usdcToken.decimals)).toFixed(2), amountB: parseFloat(ethers.utils.formatUnits(bUSDT, usdtToken.decimals)).toFixed(2), apr: "8.1%" }
+                        { tokenA: "USDC", tokenB: "REGAR", amountA: parseFloat(ethers.utils.formatUnits(bUSDC, 18)).toFixed(2), amountB: parseFloat(ethers.utils.formatUnits(bREGAR, 18)).toFixed(2), apr: "48.2%" },
+                        { tokenA: "USDC", tokenB: "EURC", amountA: parseFloat(ethers.utils.formatUnits(bUSDC, 18)).toFixed(2), amountB: parseFloat(ethers.utils.formatUnits(bEURC, 18)).toFixed(2), apr: "12.4%" },
+                        { tokenA: "USDC", tokenB: "USDT", amountA: parseFloat(ethers.utils.formatUnits(bUSDC, 18)).toFixed(2), amountB: parseFloat(ethers.utils.formatUnits(bUSDT, 18)).toFixed(2), apr: "8.1%" }
                     ];
                 } catch(e) { console.error("Error reading pool configurations on-chain", e); }
             }
@@ -709,7 +727,7 @@
                         </div>
 
                         <div class="flex gap-2">
-                            <button onclick="addLiquidityOnChain('${tA.address}', '${tB.address}')" class="flex-1 bg-gray-50 dark:bg-[#1f242f] hover:bg-gray-100 dark:hover:bg-[#2d333f] text-gray-800 dark:text-gray-200 py-2.5 rounded-xl text-xs font-bold transition-all">
+                            <button onclick="openLiquidityModal('${p.tokenA}', '${p.tokenB}')" class="flex-1 bg-gray-50 dark:bg-[#1f242f] hover:bg-gray-100 dark:hover:bg-[#2d333f] text-gray-800 dark:text-gray-200 py-2.5 rounded-xl text-xs font-bold transition-all">
                                 Add Liquidity
                             </button>
                             <button onclick="showView('swap')" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm">
@@ -721,121 +739,89 @@
             }).join('');
         }
 
-        // Perbaikan Tambahan: Fungsi Eksekusi Penambahan Likuiditas Pool ke Contract Pintar
-        async function addLiquidityOnChain(tokenAAddress, tokenBAddress) {
-            if(!userAddress) return alert("Please connect your wallet first!");
+        function openLiquidityModal(tokenA, tokenB) {
+            if (!userAddress) {
+                return alert("Please connect your wallet first!");
+            }
+            const balLabel = translations[currentLanguage].balance;
             
-            const amountAStr = prompt("Enter amount for Token A:");
-            if(!amountAStr || isNaN(amountAStr) || parseFloat(amountAStr) <= 0) return;
-            const amountBStr = prompt("Enter amount for Token B:");
-            if(!amountBStr || isNaN(amountBStr) || parseFloat(amountBStr) <= 0) return;
-
-            try {
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                const signer = provider.getSigner();
-
-                const tA = arcTestnetTokens.find(t => t.address.toLowerCase() === tokenAAddress.toLowerCase()) || { decimals: 18 };
-                const tB = arcTestnetTokens.find(t => t.address.toLowerCase() === tokenBAddress.toLowerCase()) || { decimals: 18 };
-
-                const amountAUnits = ethers.utils.parseUnits(Number(amountAStr).toFixed(tA.decimals), tA.decimals);
-                const amountBUnits = ethers.utils.parseUnits(Number(amountBStr).toFixed(tB.decimals), tB.decimals);
-
-                const erc20ABI = [
-                    "function allowance(address owner, address spender) view returns (uint256)",
-                    "function approve(address spender, uint256 amount) public returns (bool)"
-                ];
-                const contractA = new ethers.Contract(tokenAAddress, erc20ABI, signer);
-                const contractB = new ethers.Contract(tokenBAddress, erc20ABI, signer);
-
-                // Check Allowance Token A
-                const allowanceA = await contractA.allowance(userAddress, CONTRACT_POOL_ADDRESS);
-                if (allowanceA.lt(amountAUnits)) {
-                    const tx = await contractA.approve(CONTRACT_POOL_ADDRESS, amountAUnits);
-                    await tx.wait();
-                }
-
-                // Check Allowance Token B
-                const allowanceB = await contractB.allowance(userAddress, CONTRACT_POOL_ADDRESS);
-                if (allowanceB.lt(amountBUnits)) {
-                    const tx = await contractB.approve(CONTRACT_POOL_ADDRESS, amountBUnits);
-                    await tx.wait();
-                }
-
-                const poolABI = ["function addLiquidity(address _tokenA, address _tokenB, uint256 _amountA, uint256 _amountB) external"];
-                const poolContract = new ethers.Contract(CONTRACT_POOL_ADDRESS, poolABI, signer);
-
-                const mainTx = await poolContract.addLiquidity(tokenAAddress, tokenBAddress, amountAUnits, amountBUnits);
-                await mainTx.wait();
-
-                alert("Liquidity Added Successfully!");
-                renderPoolsSection();
-            } catch(e) {
-                console.error(e);
-                alert("Failed to inject liquidity on-chain. Check contract logs!");
-            }
+            document.getElementById('liqTokenASymbol').innerText = tokenA;
+            document.getElementById('liqTokenBSymbol').innerText = tokenB;
+            document.getElementById('liqBalanceA').innerText = `${balLabel}: ${tokenBalances[tokenA] || '0.0'}`;
+            document.getElementById('liqBalanceB').innerText = `${balLabel}: ${tokenBalances[tokenB] || '0.0'}`;
+            
+            document.getElementById('inputLiqAmountA').value = '';
+            document.getElementById('inputLiqAmountB').value = '';
+            
+            document.getElementById('liquidityModal').classList.remove('hidden');
         }
 
-        // Perbaikan Tambahan: Pengendali Modal Create Pool Baru
-        function openCreatePoolModal() {
-            if(!userAddress) return alert("Please connect your wallet first!");
-            document.getElementById('createPoolModal').classList.remove('hidden');
+        function closeLiquidityModal() {
+            document.getElementById('liquidityModal').classList.add('hidden');
         }
 
-        function closeCreatePoolModal() {
-            document.getElementById('createPoolModal').classList.add('hidden');
-        }
+        async function executeAddLiquidity() {
+            const tokenA = document.getElementById('liqTokenASymbol').innerText;
+            const tokenB = document.getElementById('liqTokenBSymbol').innerText;
+            const amountA = document.getElementById('inputLiqAmountA').value;
+            const amountB = document.getElementById('inputLiqAmountB').value;
+            const btn = document.getElementById('confirmLiqBtn');
 
-        async function submitCreatePoolOnChain() {
-            const tokenA = document.getElementById('newPoolTokenA').value.trim();
-            const tokenB = document.getElementById('newPoolTokenB').value.trim();
-            const amtA = document.getElementById('newPoolAmountA').value;
-            const amtB = document.getElementById('newPoolAmountB').value;
-            const btn = document.getElementById('executeCreatePoolBtn');
-
-            if(!ethers.utils.isAddress(tokenA) || !ethers.utils.isAddress(tokenB)) {
-                return alert("Please enter valid EVM contract addresses!");
-            }
-            if(!amtA || !amtB || amtA <= 0 || amtB <= 0) {
-                return alert("Liquidity amounts must be greater than zero!");
+            if (!amountA || amountA <= 0 || !amountB || amountB <= 0) {
+                return alert("Please enter a valid deposit quantity for both input forms!");
             }
 
             try {
-                btn.innerText = "Initializing & Approving...";
+                btn.innerText = "Processing Supply...";
                 btn.disabled = true;
 
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
+                const tBInfo = arcTestnetTokens.find(t => t.name === tokenB);
 
-                const tA = arcTestnetTokens.find(t => t.address.toLowerCase() === tokenA.toLowerCase()) || { decimals: 18 };
-                const tB = arcTestnetTokens.find(t => t.address.toLowerCase() === tokenB.toLowerCase()) || { decimals: 18 };
+                const amountAUnits = ethers.utils.parseUnits(Number(amountA).toFixed(18), 18);
+                const amountBUnits = ethers.utils.parseUnits(Number(amountB).toFixed(18), 18);
 
-                const unitsA = ethers.utils.parseUnits(Number(amtA).toFixed(tA.decimals), tA.decimals);
-                const unitsB = ethers.utils.parseUnits(Number(amtB).toFixed(tB.decimals), tB.decimals);
+                btn.innerText = `Sending ${tokenA}...`;
+                const txA = await signer.sendTransaction({
+                    to: CONTRACT_POOL_ADDRESS,
+                    value: amountAUnits
+                });
+                await txA.wait(1);
 
-                const erc20ABI = ["function approve(address spender, uint256 amount) public returns (bool)"];
-                const contractA = new ethers.Contract(tokenA, erc20ABI, signer);
-                const contractB = new ethers.Contract(tokenB, erc20ABI, signer);
+                btn.innerText = `Approving ${tokenB}...`;
+                const erc20ABI = [
+                    "function transfer(address to, uint256 value) public returns (bool)",
+                    "function allowance(address owner, address spender) view returns (uint226)",
+                    "function approve(address spender, uint256 amount) public returns (bool)"
+                ];
+                
+                const contractB = new ethers.Contract(tBInfo.address.toLowerCase(), erc20ABI, signer);
+                
+                const currentAllowance = await contractB.allowance(userAddress, CONTRACT_POOL_ADDRESS);
+                if (currentAllowance.lt(amountBUnits)) {
+                    if (currentAllowance.gt(0)) {
+                        await (await contractB.approve(CONTRACT_POOL_ADDRESS, 0)).wait(1);
+                    }
+                    await (await contractB.approve(CONTRACT_POOL_ADDRESS, amountBUnits)).wait(1);
+                }
 
-                const txA = await contractA.approve(CONTRACT_POOL_ADDRESS, unitsA);
-                await txA.wait();
-                const txB = await contractB.approve(CONTRACT_POOL_ADDRESS, unitsB);
-                await txB.wait();
+                btn.innerText = `Depositing ${tokenB}...`;
+                await (await contractB.transfer(CONTRACT_POOL_ADDRESS, amountBUnits)).wait(1);
 
-                // Memanggil fungsi addLiquidity untuk inisialisasi pool baru (asumsi fungsi pabrikasi terintegrasi di pool tunggal Anda)
-                const poolABI = ["function addLiquidity(address _tokenA, address _tokenB, uint256 _amountA, uint256 _amountB) external"];
-                const poolContract = new ethers.Contract(CONTRACT_POOL_ADDRESS, poolABI, signer);
+                alert("Liquidity Successfully Contributed to Hub Pool!");
+                closeLiquidityModal();
+                
+                setTimeout(() => {
+                    refreshAllBalances();
+                    renderPoolsSection();
+                }, 1500);
 
-                const txPool = await poolContract.addLiquidity(tokenA, tokenB, unitsA, unitsB);
-                await txPool.wait();
-
-                alert("Pool successfully created and registered on-chain!");
-                closeCreatePoolModal();
-                renderPoolsSection();
-            } catch(e) {
-                console.error(e);
-                alert("Creation failed. Ensure tokens allow standard ERC20 methods!");
+            } catch (err) {
+                console.error("Liquidity contribution failed on-chain:", err);
+                alert("Liquidity Addition Interrupted. Check gas limits or balance authorizations.");
             } finally {
-                btn.innerText = "Initialize Pool On-Chain";
+                btn.innerText = translations[currentLanguage].liqConfirm || "Confirm Supply";
                 btn.disabled = false;
             }
         }
