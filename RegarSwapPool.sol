@@ -12,10 +12,16 @@ interface IERC20 {
 
 /**
  * @title RegarSwapPool
- * @dev A simple liquidity pool contract for execution of token swaps and liquidity management.
+ * @dev A liquidity pool contract enabling automated token swaps, liquidity provision, and share tracking.
  */
 contract RegarSwapPool {
     address public owner;
+
+    // --- STATE VARIABLES FOR LP TOKEN SPECIFICATIONS ---
+    string public constant name = "Regar LP Token";
+    string public constant symbol = "RGR-LP";
+    uint256 public totalSupply;
+    mapping(address => uint256) public balanceOf;
 
     // Global events recognized by any blockchain explorer
     event SwapExecuted(
@@ -27,16 +33,20 @@ contract RegarSwapPool {
     );
 
     event LiquidityDeposited(
-        address indexed token,
         address indexed provider,
-        uint256 amount
+        uint256 amountA,
+        uint256 amountB,
+        uint256 shares
     );
 
     event LiquidityWithdrawn(
-        address indexed token,
         address indexed recipient,
-        uint256 amount
+        uint256 amountA,
+        uint256 amountB,
+        uint256 shares
     );
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
 
     // Modifier to restrict access to the contract owner
     modifier onlyOwner() {
@@ -46,6 +56,19 @@ contract RegarSwapPool {
 
     constructor() {
         owner = msg.sender;
+    }
+
+    // --- INTERNAL ERC-20 UTILITIES FOR LP TOKEN MINTING AND BURNING ---
+    function _mint(address _to, uint256 _amount) internal {
+        balanceOf[_to] += _amount;
+        totalSupply += _amount;
+        emit Transfer(address(0), _to, _amount);
+    }
+
+    function _burn(address _from, uint256 _amount) internal {
+        balanceOf[_from] -= _amount;
+        totalSupply -= _amount;
+        emit Transfer(_from, address(0), _amount);
     }
 
     /**
@@ -73,21 +96,79 @@ contract RegarSwapPool {
     }
 
     /**
-     * @dev Allows the owner to inject liquidity into the pool via backend transferFrom.
-     * Use this method to bypass native testnet token direct transfer restrictions.
+     * @dev Allows users to add liquidity to the pool. 
+     * Computes optimal share allocation based on Constant Product invariant mechanisms.
      */
-    function depositLiquidity(address _token, uint256 _amount) external {
-        require(_amount > 0, "Execution Error: Deposit amount must be greater than zero");
+    function addLiquidity(
+        address _tokenA, 
+        address _tokenB, 
+        uint256 _amountADesired, 
+        uint256 _amountBDesired
+    ) external returns (uint256 shares) {
+        IERC20 tokenA = IERC20(_tokenA);
+        IERC20 tokenB = IERC20(_tokenB);
+
+        // Capture current reserve values BEFORE pulling inbound tokens
+        uint256 reserveA = tokenA.balanceOf(address(this));
+        uint256 reserveB = tokenB.balanceOf(address(this));
+
+        // Pull respective asset allocations from user workspace
+        require(tokenA.transferFrom(msg.sender, address(this), _amountADesired), "Blockchain Error: Token A deposit failed");
+        require(tokenB.transferFrom(msg.sender, address(this), _amountBDesired), "Blockchain Error: Token B deposit failed");
+
+        if (totalSupply == 0) {
+            // Initial pool setup configuration uses geometric mean calculation
+            shares = _sqrt(_amountADesired * _amountBDesired);
+        } else {
+            // Standard ratio matching algorithms to ensure proportional fairness
+            uint256 sharesA = (_amountADesired * totalSupply) / reserveA;
+            uint256 sharesB = (_amountBDesired * totalSupply) / reserveB;
+            shares = _min(sharesA, sharesB);
+        }
+
+        require(shares > 0, "Liquidity Error: Minted pool shares value too low");
         
-        // Securely pull tokens using approved allowance pathways
-        bool success = IERC20(_token).transferFrom(msg.sender, address(this), _amount);
-        require(success, "Liquidity Error: Secure deposit failed. Verify token allowance parameters.");
-        
-        emit LiquidityDeposited(_token, msg.sender, _amount);
+        // Distribute newly minted LP receipt assets directly to provider
+        _mint(msg.sender, shares);
+
+        emit LiquidityDeposited(msg.sender, _amountADesired, _amountBDesired, shares);
     }
 
     /**
-     * @dev Allows the contract owner to safely withdraw pool funds.
+     * @dev Removes liquidity from the pool by burning the specified LP shares.
+     * Reclaims original token values proportionally to the sender address.
+     */
+    function removeLiquidity(
+        address _tokenA, 
+        address _tokenB, 
+        uint256 _shares
+    ) external returns (uint256 amountA, uint256 amountB) {
+        require(balanceOf[msg.sender] >= _shares, "Liquidity Error: Insufficient LP shares balance");
+
+        IERC20 tokenA = IERC20(_tokenA);
+        IERC20 tokenB = IERC20(_tokenB);
+
+        uint256 reserveA = tokenA.balanceOf(address(this));
+        uint256 reserveB = tokenB.balanceOf(address(this));
+
+        // Resolve underlying token amounts mathematically based on burn targets
+        amountA = (_shares * reserveA) / totalSupply;
+        amountB = (_shares * reserveB) / totalSupply;
+
+        require(amountA > 0 && amountB > 0, "Liquidity Error: Resolved withdrawal amounts are invalid");
+
+        // Destroy tracking assets prior to distribution
+        _burn(msg.sender, _shares);
+
+        // Issue primary asset payload segments back to caller
+        require(tokenA.transfer(msg.sender, amountA), "Blockchain Error: Token A refund transfer failed");
+        require(tokenB.transfer(msg.sender, amountB), "Blockchain Error: Token B refund transfer failed");
+
+        emit LiquidityWithdrawn(msg.sender, amountA, amountB, _shares);
+    }
+
+    /**
+     * @dev Emergency recovery routine allowing the platform owner to safely sweep pool components.
      */
     function withdrawToken(address _token, uint256 _amount) external onlyOwner {
         uint256 currentBalance = IERC20(_token).balanceOf(address(this));
@@ -95,7 +176,23 @@ contract RegarSwapPool {
         
         bool success = IERC20(_token).transfer(owner, _amount);
         require(success, "Blockchain Error: Withdrawal process failed.");
-        
-        emit LiquidityWithdrawn(_token, owner, _amount);
+    }
+
+    // --- MATHEMATICAL UTILITIES ---
+    function _sqrt(uint256 y) internal pure returns (uint256 z) {
+        if (y > 3) {
+            z = y;
+            uint256 x = y / 2 + 1;
+            while (x < z) {
+                z = x;
+                x = (y / x + x) / 2;
+            }
+        } else if (y != 0) {
+            z = 1;
+        }
+    }
+
+    function _min(uint256 x, uint256 y) internal pure returns (uint256) {
+        return x < y ? x : y;
     }
 }
