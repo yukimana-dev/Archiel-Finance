@@ -16,19 +16,25 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
 						"name": "provider",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "amountA",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountB",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "shares",
 						"type": "uint256"
 					}
 				],
@@ -41,19 +47,25 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
 						"name": "recipient",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "amountA",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountB",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "shares",
 						"type": "uint256"
 					}
 				],
@@ -98,21 +110,81 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "Transfer",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_token",
+						"name": "_tokenA",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_tokenB",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_amount",
+						"name": "_amountADesired",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amountBDesired",
 						"type": "uint256"
 					}
 				],
-				"name": "depositLiquidity",
-				"outputs": [],
+				"name": "addLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "shares",
+						"type": "uint256"
+					}
+				],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "balanceOf",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -145,12 +217,85 @@
 			},
 			{
 				"inputs": [],
+				"name": "name",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "owner",
 				"outputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenA",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_tokenB",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_shares",
+						"type": "uint256"
+					}
+				],
+				"name": "removeLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "amountA",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amountB",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "symbol",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -176,17 +321,20 @@
 			}
 		],
 		"devdoc": {
-			"details": "A simple liquidity pool contract for execution of token swaps and liquidity management.",
+			"details": "A liquidity pool contract enabling automated token swaps, liquidity provision, and share tracking.",
 			"kind": "dev",
 			"methods": {
-				"depositLiquidity(address,uint256)": {
-					"details": "Allows the owner to inject liquidity into the pool via backend transferFrom. Use this method to bypass native testnet token direct transfer restrictions."
+				"addLiquidity(address,address,uint256,uint256)": {
+					"details": "Allows users to add liquidity to the pool.  Computes optimal share allocation based on Constant Product invariant mechanisms."
 				},
 				"executeSwap(address,address,uint256,uint256)": {
 					"details": "Executes a peer-to-contract swap between two ERC20 tokens."
 				},
+				"removeLiquidity(address,address,uint256)": {
+					"details": "Removes liquidity from the pool by burning the specified LP shares. Reclaims original token values proportionally to the sender address."
+				},
 				"withdrawToken(address,uint256)": {
-					"details": "Allows the contract owner to safely withdraw pool funds."
+					"details": "Emergency recovery routine allowing the platform owner to safely sweep pool components."
 				}
 			},
 			"title": "RegarSwapPool",
@@ -215,11 +363,11 @@
 	},
 	"sources": {
 		"RegarSwapPool.sol": {
-			"keccak256": "0x06bfa947485fef700523219808c92303bb68127459a7af0928c8ea4e63a79711",
+			"keccak256": "0x5e2acf11730866ec8092c097f43c84c5de141e21c231565796df548613eead13",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c90f03a582b115d2b277d47d9c7ee4536ac34fdfe28304744fd0b75163d55593",
-				"dweb:/ipfs/QmcECR1A4WmBmHVVTbUXzf9bACvGrCpfPppPJ6NHiFTSD1"
+				"bzz-raw://bd38883fff14590e3f5b7b4deffbe73480e0f2f0cd0c543629cd5b1af89dd75e",
+				"dweb:/ipfs/QmUKsU4nepFvibj6hcwijFaesJRVY245jADnXsCnJdcyZQ"
 			]
 		}
 	},
