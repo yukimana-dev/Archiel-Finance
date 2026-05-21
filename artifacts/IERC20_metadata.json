@@ -9,6 +9,30 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					}
+				],
+				"name": "allowance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "spender",
 						"type": "address"
 					},
@@ -47,6 +71,72 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transfer",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transferFrom",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -62,7 +152,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"IUSDCToken.sol": "IERC20"
+			"PoolEURC.sol": "IERC20"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -76,12 +166,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"IUSDCToken.sol": {
-			"keccak256": "0x201328b389b786932b88f89e527c28e92aa1c96d2cfe77732e21e3904b6c2634",
+		"PoolEURC.sol": {
+			"keccak256": "0x939f18a133c50fba0d480e26e5f672228e8e5890fd49fbe393333b7be4cf570d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://932883c19f16cd9e81b32ba09e4b04fdf6960f014bf6efeaaa5bb06bd241874f",
-				"dweb:/ipfs/Qme3dN5fhgGTAdtgMwhkXgrPzHbM62gn6WvqnP83jjDDGw"
+				"bzz-raw://4330d4044a2c11cd1bed1b89d0e9d4a3d05d5f7f2a81593de305e59b0c48d959",
+				"dweb:/ipfs/Qma1Kxfq9nYg5uGfdgPC5gew6oWXiBuy7juT2cwotJCDv2"
 			]
 		}
 	},
