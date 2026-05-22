@@ -9,54 +9,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "spender",
-						"type": "address"
-					}
-				],
-				"name": "allowance",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "spender",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "approve",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "account",
 						"type": "address"
 					}
@@ -73,23 +25,10 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "totalSupply",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "recipient",
+						"name": "to",
 						"type": "address"
 					},
 					{
@@ -113,12 +52,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "sender",
+						"name": "from",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "recipient",
+						"name": "to",
 						"type": "address"
 					},
 					{
@@ -152,7 +91,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"PoolEURC.sol": "IERC20"
+			"ArchielSwapPool.sol": "IERC20"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -166,12 +105,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"PoolEURC.sol": {
-			"keccak256": "0x939f18a133c50fba0d480e26e5f672228e8e5890fd49fbe393333b7be4cf570d",
+		"ArchielSwapPool.sol": {
+			"keccak256": "0x1d476ead7cdd62812916723ae25914a75134e0517e35971f0fdc4c604e8ec43e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4330d4044a2c11cd1bed1b89d0e9d4a3d05d5f7f2a81593de305e59b0c48d959",
-				"dweb:/ipfs/Qma1Kxfq9nYg5uGfdgPC5gew6oWXiBuy7juT2cwotJCDv2"
+				"bzz-raw://386989e910ca724adf06fe9276e522368992138c648faab88011093cbff4d3e6",
+				"dweb:/ipfs/QmP8i8He8mKnLvtxQfjFoz3qWqT8HSx2ZCg6q9yGAChUCW"
 			]
 		}
 	},

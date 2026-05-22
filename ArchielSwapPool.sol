@@ -8,7 +8,6 @@ interface IERC20 {
 }
 
 contract ArchielSwapPool {
-    address public owner;
     string public constant name = "Archiel LP Token";
     string public constant symbol = "ARCL-LP";
     uint256 public totalSupply;
@@ -17,16 +16,30 @@ contract ArchielSwapPool {
     event LiquidityDeposited(address indexed provider, uint256 amountA, uint256 amountB, uint256 shares);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    constructor() {
-        owner = msg.sender;
+    // Swap Function (Generic for any token)
+    function executeSwap(
+        address _tokenIn, 
+        address _tokenOut, 
+        uint256 _amountIn, 
+        uint256 _amountOut
+    ) external {
+        IERC20 tokenIn = IERC20(_tokenIn);
+        IERC20 tokenOut = IERC20(_tokenOut);
+
+        // Check if pool has enough liquidity
+        require(tokenOut.balanceOf(address(this)) >= _amountOut, "Pool: Insufficient liquidity");
+
+        // Execute transfers
+        require(tokenIn.transferFrom(msg.sender, address(this), _amountIn), "Swap: Transfer In failed");
+        require(tokenOut.transfer(msg.sender, _amountOut), "Swap: Transfer Out failed");
     }
 
-    function _mint(address _to, uint256 _amount) internal {
-        balanceOf[_to] += _amount;
-        totalSupply += _amount;
-        emit Transfer(address(0), _to, _amount);
+    // Check Liquidity Reserve
+    function getReserve(address _token) external view returns (uint256) {
+        return IERC20(_token).balanceOf(address(this));
     }
 
+    // Add Liquidity Function (Generic for any pair)
     function addLiquidity(
         address _tokenA, 
         address _tokenB, 
@@ -36,9 +49,8 @@ contract ArchielSwapPool {
         IERC20 tokenA = IERC20(_tokenA);
         IERC20 tokenB = IERC20(_tokenB);
 
-        // Tarik token dari user
-        require(tokenA.transferFrom(msg.sender, address(this), _amountADesired), "Transfer A gagal");
-        require(tokenB.transferFrom(msg.sender, address(this), _amountBDesired), "Transfer B gagal");
+        require(tokenA.transferFrom(msg.sender, address(this), _amountADesired), "Transfer A failed");
+        require(tokenB.transferFrom(msg.sender, address(this), _amountBDesired), "Transfer B failed");
 
         if (totalSupply == 0) {
             shares = _sqrt(_amountADesired * _amountBDesired);
@@ -48,9 +60,15 @@ contract ArchielSwapPool {
             shares = _min((_amountADesired * totalSupply) / reserveA, (_amountBDesired * totalSupply) / reserveB);
         }
 
-        require(shares > 0, "Shares terlalu rendah");
+        require(shares > 0, "Shares too low");
         _mint(msg.sender, shares);
         emit LiquidityDeposited(msg.sender, _amountADesired, _amountBDesired, shares);
+    }
+
+    function _mint(address _to, uint256 _amount) internal {
+        balanceOf[_to] += _amount;
+        totalSupply += _amount;
+        emit Transfer(address(0), _to, _amount);
     }
 
     function _sqrt(uint256 y) internal pure returns (uint256 z) {
