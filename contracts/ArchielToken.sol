@@ -1,46 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
+// Compatible with OpenZeppelin Contracts ^5.6.0
+pragma solidity ^0.8.27;
 
-contract ArchielToken {
-    string public constant name = "Archiel Token";
-    string public constant symbol = "ARCL";
-    uint8 public constant decimals = 18;
-    uint256 public totalSupply;
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 
-    mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(address => uint256)) public allowance;
-
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-
-    constructor(uint256 _initialSupply) {
-        // Mengalikan dengan 10^18 secara otomatis
-        totalSupply = _initialSupply * 10**uint256(decimals);
-        balanceOf[msg.sender] = totalSupply;
-        emit Transfer(address(0), msg.sender, totalSupply);
-    }
-
-    function transfer(address _to, uint256 _value) public returns (bool) {
-        require(balanceOf[msg.sender] >= _value, "Balance insufficient");
-        balanceOf[msg.sender] -= _value;
-        balanceOf[_to] += _value;
-        emit Transfer(msg.sender, _to, _value);
-        return true;
-    }
-
-    function approve(address _spender, uint256 _value) public returns (bool) {
-        allowance[msg.sender][_spender] = _value;
-        emit Approval(msg.sender, _spender, _value);
-        return true;
-    }
-
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool) {
-        require(balanceOf[_from] >= _value, "Balance insufficient");
-        require(allowance[_from][msg.sender] >= _value, "Allowance insufficient");
-        balanceOf[_from] -= _value;
-        balanceOf[_to] += _value;
-        allowance[_from][msg.sender] -= _value;
-        emit Transfer(_from, _to, _value);
-        return true;
+contract ARCHIEL is ERC20, ERC20Permit {
+    constructor(address recipient)
+        ERC20("ARCHIEL", "ARCL")
+        ERC20Permit("ARCHIEL")
+    {
+        _mint(recipient, 100000000 * 10 ** decimals());
     }
 }

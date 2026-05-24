@@ -6,109 +6,18 @@
 	"output": {
 		"abi": [
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "provider",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountA",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountB",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "shares",
-						"type": "uint256"
-					}
-				],
-				"name": "LiquidityDeposited",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "from",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "to",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "value",
-						"type": "uint256"
-					}
-				],
-				"name": "Transfer",
-				"type": "event"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_tokenA",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_tokenB",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_amountADesired",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_amountBDesired",
-						"type": "uint256"
-					}
-				],
-				"name": "addLiquidity",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "shares",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
+				"type": "constructor"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
-					}
-				],
-				"name": "balanceOf",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -130,14 +39,9 @@
 						"internalType": "uint256",
 						"name": "_amountIn",
 						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_amountOut",
-						"type": "uint256"
 					}
 				],
-				"name": "executeSwap",
+				"name": "swap",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -148,56 +52,16 @@
 						"internalType": "address",
 						"name": "_token",
 						"type": "address"
-					}
-				],
-				"name": "getReserve",
-				"outputs": [
+					},
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_amount",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "name",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "symbol",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "totalSupply",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "withdrawToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -229,11 +93,11 @@
 	},
 	"sources": {
 		"ArchielSwapPool.sol": {
-			"keccak256": "0x1d476ead7cdd62812916723ae25914a75134e0517e35971f0fdc4c604e8ec43e",
+			"keccak256": "0x684b567a502922adc7fdf43b028c52df4e2c5bd1279fcaa980b71e1f89021fbe",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://386989e910ca724adf06fe9276e522368992138c648faab88011093cbff4d3e6",
-				"dweb:/ipfs/QmP8i8He8mKnLvtxQfjFoz3qWqT8HSx2ZCg6q9yGAChUCW"
+				"bzz-raw://d55481b693bd098bdacd383495cdeeb77bb1586145b26a2e04c4e2507a9ae8af",
+				"dweb:/ipfs/QmYapxt3f1p7tUFujjthaxfmwFLQ6rNtpP3vPD8yEyzmQv"
 			]
 		}
 	},
